@@ -1,0 +1,19 @@
+:root {
+  /* Colores (aproximados del prototipo de Figma) */
+  --color-fondo: #f5ebe4;
+  --color-hero: #e9b9b5;
+  --color-mancha: #dbacbf;
+  --color-texto: #3a2f2c;
+  --color-texto-suave: #675d58;
+  --color-blanco: #ffffff;
+  --color-primario: #7a5c4b;
+  --color-acento: #c0202f;
+  --color-tarjeta-rosa: #fce3de;
+  --color-tarjeta-azul: #ddebf5;
+
+  /* Tipografía */
+  --fuente-base: 'Inter', system-ui, sans-serif;
+
+  /* Formas */
+  --radio: 0.75rem;
+}
