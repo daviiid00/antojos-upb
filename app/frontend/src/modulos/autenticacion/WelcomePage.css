@@ -1,0 +1,142 @@
+.welcome {
+  display: flex;
+  flex-direction: column;
+  max-width: 28rem;
+  min-height: 100vh;
+  min-height: 100dvh;
+  margin-inline: auto;
+}
+
+/* Franja rosada con logo y título */
+.welcome__hero {
+  /* isolation deja la mancha detrás del título pero encima del rosado */
+  isolation: isolate;
+  overflow: hidden;
+  padding-block: 3rem 2rem;
+  background-color: var(--color-hero);
+}
+
+.welcome__logo {
+  width: 100%;
+  height: auto;
+  margin-bottom: 2.5rem;
+  /* El PNG tiene las letras transparentes: el blanco las rellena */
+  background-color: var(--color-blanco);
+}
+
+.welcome__titulo {
+  position: relative;
+  padding-inline: 1.5rem;
+  font-size: clamp(2rem, 9.5vw, 2.5rem);
+  font-style: italic;
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+/* Mancha decorativa detrás de la primera línea del título */
+.welcome__titulo::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  top: -0.15em;
+  left: -12%;
+  width: 60%;
+  height: 1.6em;
+  border-radius: 50%;
+  background-color: var(--color-mancha);
+}
+
+/* Contenido sobre el fondo crema */
+.welcome__contenido {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 2rem 1.5rem;
+}
+
+.welcome__descripcion {
+  color: var(--color-texto-suave);
+}
+
+/* Dos columnas mientras quepan; en pantallas muy angostas pasan a una */
+.welcome__tarjetas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  gap: 0.75rem;
+  padding: 0;
+  list-style: none;
+}
+
+.welcome__tarjeta {
+  padding: 0.875rem;
+  border-radius: var(--radio);
+}
+
+.welcome__tarjeta--rosa {
+  background-color: var(--color-tarjeta-rosa);
+}
+
+.welcome__tarjeta--azul {
+  background-color: var(--color-tarjeta-azul);
+}
+
+.welcome__tarjeta-titulo {
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.welcome__tarjeta--rosa .welcome__tarjeta-titulo {
+  color: var(--color-acento);
+}
+
+.welcome__tarjeta-texto {
+  font-size: 0.8125rem;
+  color: var(--color-texto-suave);
+}
+
+/* Acciones empujadas al fondo de la pantalla */
+.welcome__acciones {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  margin-top: auto;
+  text-align: center;
+}
+
+.welcome__boton {
+  display: block;
+  padding: 0.875rem;
+  border-radius: var(--radio);
+  background-color: var(--color-primario);
+  color: var(--color-blanco);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.welcome__boton:hover {
+  filter: brightness(1.1);
+}
+
+.welcome__pregunta {
+  font-size: 0.9375rem;
+  color: var(--color-texto-suave);
+}
+
+.welcome__enlace {
+  color: var(--color-acento);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.welcome__enlace:hover {
+  text-decoration: underline;
+}
+
+.welcome__boton:focus-visible,
+.welcome__enlace:focus-visible {
+  outline: 3px solid var(--color-acento);
+  outline-offset: 3px;
+}
