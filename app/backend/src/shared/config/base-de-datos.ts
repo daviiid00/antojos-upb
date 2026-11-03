@@ -1,4 +1,6 @@
 import type { DataSourceOptions } from 'typeorm';
+import { Usuario } from '../../modules/usuarios/data/usuario.entity.js';
+import { CrearTablaUsers1793724975476 } from '../migraciones/1793724975476-crear-tabla-users.js';
 import type { Entorno } from './env.js';
 
 export function opcionesBaseDeDatos(
@@ -13,8 +15,8 @@ export function opcionesBaseDeDatos(
     database: leer('DB_NAME'),
     charset: 'utf8mb4',
     // Entidades y migraciones se listan una por una, sin comodines.
-    entities: [],
-    migrations: [],
+    entities: [Usuario],
+    migrations: [CrearTablaUsers1793724975476],
     synchronize: false,
   };
 }

@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { UsuariosModule } from './modules/usuarios/usuarios.module.js';
 import { opcionesBaseDeDatos } from './shared/config/base-de-datos.js';
 import { type Entorno, validarEntorno } from './shared/config/env.js';
 
@@ -12,6 +13,7 @@ import { type Entorno, validarEntorno } from './shared/config/env.js';
       useFactory: (config: ConfigService<Entorno, true>) =>
         opcionesBaseDeDatos((nombre) => config.get(nombre, { infer: true })),
     }),
+    UsuariosModule,
   ],
 })
 export class AppModule {}
