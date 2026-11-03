@@ -1,0 +1,71 @@
+// Íconos de trazo que heredan el color del texto (currentColor).
+function Icono({ children }) {
+  return (
+    <svg
+      className="icono"
+      viewBox="0 0 24 24"
+      width="20"
+      height="20"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.75"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      focusable="false"
+    >
+      {children}
+    </svg>
+  )
+}
+
+export function IconoVolver() {
+  return (
+    <Icono>
+      <path d="M19 12H5M12 19l-7-7 7-7" />
+    </Icono>
+  )
+}
+
+export function IconoPersona() {
+  return (
+    <Icono>
+      <circle cx="12" cy="8" r="4" />
+      <path d="M4 21a8 8 0 0 1 16 0" />
+    </Icono>
+  )
+}
+
+export function IconoCorreo() {
+  return (
+    <Icono>
+      <rect x="3" y="5" width="18" height="14" rx="2" />
+      <path d="m3 7 9 6 9-6" />
+    </Icono>
+  )
+}
+
+export function IconoCandado() {
+  return (
+    <Icono>
+      <rect x="5" y="11" width="14" height="10" rx="2" />
+      <path d="M8 11V7a4 4 0 0 1 8 0v4" />
+    </Icono>
+  )
+}
+
+export function IconoDesplegar() {
+  return (
+    <Icono>
+      <path d="m6 9 6 6 6-6" />
+    </Icono>
+  )
+}
+
+export function IconoContinuar() {
+  return (
+    <Icono>
+      <path d="M5 12h14M12 5l7 7-7 7" />
+    </Icono>
+  )
+}
