@@ -120,6 +120,17 @@
   font-size: 0.75rem;
 }
 
+/* Error de un campo puntual, justo debajo de él */
+.registro__entrada[aria-invalid='true'] {
+  border-color: var(--color-acento);
+}
+
+.registro__error-campo {
+  color: var(--color-acento);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
 .registro__terminos {
   display: flex;
   align-items: flex-start;
