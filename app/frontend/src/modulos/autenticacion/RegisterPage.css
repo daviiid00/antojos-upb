@@ -1,0 +1,199 @@
+.registro {
+  display: flex;
+  flex-direction: column;
+  max-width: 28rem;
+  min-height: 100vh;
+  min-height: 100dvh;
+  margin-inline: auto;
+  padding: 1.25rem 1.5rem 2rem;
+}
+
+/* Barra superior con botón de volver */
+.registro__barra {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  margin-bottom: 1.5rem;
+}
+
+.registro__volver {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background-color: var(--color-blanco);
+  color: var(--color-texto);
+}
+
+.registro__barra-titulo {
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.registro__titulo {
+  color: var(--color-acento);
+  font-size: 1.75rem;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.registro__subtitulo {
+  margin-top: 0.375rem;
+  color: var(--color-texto-suave);
+  font-size: 0.9375rem;
+}
+
+.registro__formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 1.125rem;
+  margin-top: 1.75rem;
+}
+
+.registro__campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  min-width: 0;
+}
+
+.registro__etiqueta {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+/* Contenedor del campo: el ícono va encima del input, a la izquierda */
+.registro__control {
+  position: relative;
+  color: var(--color-texto-suave);
+}
+
+.registro__control .icono {
+  position: absolute;
+  top: 50%;
+  left: 0.875rem;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.registro__entrada {
+  width: 100%;
+  height: 3rem;
+  padding: 0 0.875rem 0 2.75rem;
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+  background-color: var(--color-blanco);
+  color: var(--color-texto);
+  font: inherit;
+  font-size: 0.9375rem;
+}
+
+.registro__entrada:focus-visible {
+  border-color: var(--color-primario);
+  outline: 2px solid var(--color-primario);
+  outline-offset: 1px;
+}
+
+/* Selects: sin ícono a la izquierda y con flecha propia a la derecha */
+.registro__control--select .registro__entrada {
+  padding-inline: 0.875rem 2.5rem;
+  appearance: none;
+  cursor: pointer;
+}
+
+.registro__control--select .icono {
+  right: 0.875rem;
+  left: auto;
+}
+
+/* Soy y Sede lado a lado mientras quepan */
+.registro__fila {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+  gap: 0.75rem;
+}
+
+.registro__ayuda {
+  color: var(--color-texto-suave);
+  font-size: 0.75rem;
+}
+
+/* Error de un campo puntual, justo debajo de él */
+.registro__entrada[aria-invalid='true'] {
+  border-color: var(--color-acento);
+}
+
+.registro__error-campo {
+  color: var(--color-acento);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.registro__terminos {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.625rem;
+  color: var(--color-texto-suave);
+  font-size: 0.8125rem;
+  cursor: pointer;
+}
+
+.registro__terminos strong {
+  color: var(--color-texto);
+  font-weight: 600;
+}
+
+.registro__casilla {
+  flex-shrink: 0;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-top: 0.0625rem;
+  accent-color: var(--color-primario);
+  cursor: pointer;
+}
+
+.registro__errores {
+  padding: 0.75rem 1rem;
+  border-radius: var(--radio);
+  background-color: var(--color-tarjeta-rosa);
+  color: var(--color-acento);
+  font-size: 0.875rem;
+}
+
+.registro__errores ul {
+  padding-left: 1.125rem;
+}
+
+.registro__boton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  padding: 0.875rem;
+  border: none;
+  border-radius: var(--radio);
+  background-color: var(--color-primario);
+  color: var(--color-blanco);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.registro__boton:hover:not(:disabled) {
+  filter: brightness(1.1);
+}
+
+.registro__boton:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.registro__volver:focus-visible,
+.registro__casilla:focus-visible,
+.registro__boton:focus-visible {
+  outline: 3px solid var(--color-acento);
+  outline-offset: 3px;
+}
