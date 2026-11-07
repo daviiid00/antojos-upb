@@ -4,6 +4,7 @@ import { Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import request from 'supertest';
 import type { App } from 'supertest/types.js';
+import { QueryFailedError } from 'typeorm';
 import { Usuario } from '../src/modules/usuarios/data/usuario.entity.js';
 import { UsuariosModule } from '../src/modules/usuarios/usuarios.module.js';
 import { crearValidationPipe } from '../src/shared/config/validacion.js';
@@ -20,14 +21,23 @@ const registroValido = {
 describe('POST /auth/register (e2e)', () => {
   let app: INestApplication<App>;
   let repositorio: {
+    existsBy: ReturnType<typeof vi.fn>;
     create: ReturnType<typeof vi.fn>;
     save: ReturnType<typeof vi.fn>;
   };
 
   beforeEach(async () => {
+    // Repositorio en memoria: recuerda los correos guardados en cada prueba.
+    const correos = new Set<string>();
     repositorio = {
+      existsBy: vi.fn(async ({ email }: { email: string }) =>
+        correos.has(email),
+      ),
       create: vi.fn((usuario) => usuario),
-      save: vi.fn(async (usuario) => ({ ...usuario, id: 1 })),
+      save: vi.fn(async (usuario) => {
+        correos.add(usuario.email);
+        return { ...usuario, id: correos.size };
+      }),
     };
     const modulo = await Test.createTestingModule({
       imports: [
@@ -109,5 +119,67 @@ describe('POST /auth/register (e2e)', () => {
     await registrar({ ...registroValido, ...cambio }).expect(400);
 
     expect(repositorio.save).not.toHaveBeenCalled();
+  });
+
+  describe('correo institucional', () => {
+    it.each([
+      ['de otro dominio', 'laura@gmail.com'],
+      ['de un subdominio', 'laura@estudiantes.upb.edu.co'],
+      ['que solo contiene el dominio', 'laura@upb.edu.co.com'],
+      ['parecido al dominio, sin los puntos', 'laura@upbxeduxco'],
+    ])('rechaza con 400 un correo %s', async (_caso, email) => {
+      const respuesta = await registrar({ ...registroValido, email }).expect(
+        400,
+      );
+
+      expect(respuesta.body.message).toContain(
+        'El correo debe ser institucional (@upb.edu.co).',
+      );
+      expect(repositorio.save).not.toHaveBeenCalled();
+    });
+
+    it('acepta "Laura@UPB.EDU.CO" y lo guarda normalizado', async () => {
+      await registrar({ ...registroValido, email: 'Laura@UPB.EDU.CO' }).expect(
+        201,
+      );
+
+      expect(repositorio.existsBy).toHaveBeenCalledWith({
+        email: 'laura@upb.edu.co',
+      });
+      expect(repositorio.save.mock.calls[0][0].email).toBe('laura@upb.edu.co');
+    });
+  });
+
+  describe('correo repetido', () => {
+    it('responde 409 si el correo ya tiene una cuenta, aunque cambien las mayúsculas', async () => {
+      await registrar(registroValido).expect(201);
+
+      const respuesta = await registrar({
+        ...registroValido,
+        email: 'DAVID@upb.edu.co',
+      }).expect(409);
+
+      expect(respuesta.body.message).toBe(
+        'Este correo ya tiene una cuenta asociada.',
+      );
+      expect(respuesta.body).not.toHaveProperty('token');
+      expect(repositorio.save).toHaveBeenCalledOnce();
+    });
+
+    it('responde 409 si el índice único frena un registro simultáneo', async () => {
+      repositorio.save.mockRejectedValueOnce(
+        new QueryFailedError(
+          'INSERT INTO users ...',
+          [],
+          Object.assign(new Error('Duplicate entry'), { code: 'ER_DUP_ENTRY' }),
+        ),
+      );
+
+      const respuesta = await registrar(registroValido).expect(409);
+
+      expect(respuesta.body.message).toBe(
+        'Este correo ya tiene una cuenta asociada.',
+      );
+    });
   });
 });

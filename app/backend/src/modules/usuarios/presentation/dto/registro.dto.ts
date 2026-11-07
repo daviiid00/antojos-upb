@@ -11,6 +11,7 @@ import {
   MinLength,
 } from 'class-validator';
 import {
+  DOMINIO_INSTITUCIONAL,
   SEDES,
   type Sede,
   VINCULOS_UNIVERSITARIOS,
@@ -19,6 +20,11 @@ import {
 
 const recortar = ({ value }: { value: unknown }) =>
   typeof value === 'string' ? value.trim() : value;
+
+// Termina exactamente en @upb.edu.co (los puntos escapados para que sean literales).
+const CORREO_INSTITUCIONAL = new RegExp(
+  `${DOMINIO_INSTITUCIONAL.replaceAll('.', '\\.')}$`,
+);
 
 export class RegistroDto {
   @Transform(recortar)
@@ -31,6 +37,10 @@ export class RegistroDto {
     typeof value === 'string' ? value.trim().toLowerCase() : value,
   )
   @IsEmail({}, { message: 'El correo no es válido.' })
+  // Se valida después del Transform, así que "Laura@UPB.EDU.CO" ya llega en minúsculas.
+  @Matches(CORREO_INSTITUCIONAL, {
+    message: `El correo debe ser institucional (${DOMINIO_INSTITUCIONAL}).`,
+  })
   @MaxLength(255, { message: 'El correo no puede superar 255 caracteres.' })
   email: string;
 

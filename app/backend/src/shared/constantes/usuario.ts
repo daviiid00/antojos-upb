@@ -7,5 +7,8 @@ export const SEDES = ['Medellín'] as const;
 // todo usuario puede comprar y vender.
 export const VINCULOS_UNIVERSITARIOS = ['Estudiante'] as const;
 
+// Único dominio de correo aceptado en el registro.
+export const DOMINIO_INSTITUCIONAL = '@upb.edu.co';
+
 export type Sede = (typeof SEDES)[number];
 export type VinculoUniversitario = (typeof VINCULOS_UNIVERSITARIOS)[number];

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { Link, Navigate, useNavigate } from 'react-router'
 import {
   IconoCandado,
@@ -9,6 +9,7 @@ import {
   IconoVolver,
 } from '../../compartido/componentes/Iconos.jsx'
 import {
+  DOMINIO_INSTITUCIONAL,
   SEDES,
   VINCULOS_UNIVERSITARIOS,
 } from '../../compartido/constantes/usuario.js'
@@ -29,27 +30,38 @@ const DATOS_INICIALES = {
 }
 
 const MENSAJE_GENERAL = 'No pudimos crear tu cuenta. Inténtalo de nuevo.'
+const MENSAJE_DOMINIO = `El correo debe ser institucional (${DOMINIO_INSTITUCIONAL}).`
 
-// El 400 del backend trae un arreglo de mensajes en español; cualquier otro
-// error (incluido el 500 del correo repetido, que maneja ANTOJOS-12) es general.
+// Igual que el backend: se compara el correo recortado y en minúsculas.
+function esCorreoInstitucional(correo) {
+  return correo.trim().toLowerCase().endsWith(DOMINIO_INSTITUCIONAL)
+}
+
+// El 400 del backend trae un arreglo de mensajes y el 409 (correo repetido)
+// un solo texto; cualquier otro error muestra el mensaje general.
 function mensajesDeError(error) {
-  const mensajes =
-    error instanceof ErrorApi && error.estado === 400
+  const mensaje =
+    error instanceof ErrorApi && [400, 409].includes(error.estado)
       ? error.cuerpo?.message
       : null
-  return Array.isArray(mensajes) ? [...new Set(mensajes)] : [MENSAJE_GENERAL]
+  if (Array.isArray(mensaje)) return [...new Set(mensaje)]
+  if (typeof mensaje === 'string') return [mensaje]
+  return [MENSAJE_GENERAL]
 }
 
 function RegisterPage() {
   const navigate = useNavigate()
+  const campoCorreo = useRef(null)
   const [datos, setDatos] = useState(DATOS_INICIALES)
   const [errores, setErrores] = useState([])
+  const [errorCorreo, setErrorCorreo] = useState(null)
   const [enviando, setEnviando] = useState(false)
 
   if (haySesion()) return <Navigate to="/home" replace />
 
   function actualizar(evento) {
     const { name, type, value, checked } = evento.target
+    if (name === 'email') setErrorCorreo(null)
     setDatos((previos) => ({
       ...previos,
       [name]: type === 'checkbox' ? checked : value,
@@ -59,6 +71,11 @@ function RegisterPage() {
   async function enviar(evento) {
     evento.preventDefault()
     setErrores([])
+    if (!esCorreoInstitucional(datos.email)) {
+      setErrorCorreo(MENSAJE_DOMINIO)
+      campoCorreo.current?.focus()
+      return
+    }
     setEnviando(true)
     try {
       const { token } = await llamarApi('/auth/register', {
@@ -120,6 +137,7 @@ function RegisterPage() {
           <div className="registro__control">
             <IconoCorreo />
             <input
+              ref={campoCorreo}
               id="registro-correo"
               className="registro__entrada"
               type="email"
@@ -130,9 +148,19 @@ function RegisterPage() {
               value={datos.email}
               onChange={actualizar}
               aria-required="true"
-              aria-describedby="registro-correo-ayuda"
+              aria-invalid={errorCorreo ? 'true' : undefined}
+              aria-describedby={
+                errorCorreo
+                  ? 'registro-correo-error registro-correo-ayuda'
+                  : 'registro-correo-ayuda'
+              }
             />
           </div>
+          {errorCorreo && (
+            <p id="registro-correo-error" className="registro__error-campo">
+              {errorCorreo}
+            </p>
+          )}
           <p id="registro-correo-ayuda" className="registro__ayuda">
             Usaremos este correo para validar tu vínculo con UPB.
           </p>

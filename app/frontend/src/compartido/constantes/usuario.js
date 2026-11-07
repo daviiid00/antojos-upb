@@ -5,3 +5,6 @@ export const SEDES = ['Medellín']
 
 // Vínculo informativo con la UPB. No es un rol ni da permisos.
 export const VINCULOS_UNIVERSITARIOS = ['Estudiante']
+
+// Único dominio de correo aceptado en el registro.
+export const DOMINIO_INSTITUCIONAL = '@upb.edu.co'
