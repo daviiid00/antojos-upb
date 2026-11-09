@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
+import { TIPOS_PRODUCTO } from '../../compartido/constantes/tipos-producto.js'
 import { buscarProductos } from '../../compartido/servicios/productos.js'
 import SearchBar from './SearchBar.jsx'
+import TypeFilterChips from './TypeFilterChips.jsx'
 import './CatalogPage.css'
 
 function formatearPrecio(precio) {
@@ -8,37 +10,50 @@ function formatearPrecio(precio) {
 }
 
 function CatalogPage() {
-  // consulta = término buscado ('' = catálogo general)
+  // consulta = texto de la barra, tipo = id del chip elegido ('' = Todos)
   const [consulta, setConsulta] = useState('')
-  // Se guarda el resultado junto con la consulta a la que pertenece
+  const [tipo, setTipo] = useState('')
+  // El resultado se guarda junto con los filtros a los que pertenece
   const [resultado, setResultado] = useState({
     consulta: null,
+    tipo: null,
     productos: [],
     hayError: false,
   })
 
-  // Cada vez que cambia la consulta se vuelve a pedir la lista
+  // Cada vez que cambia un filtro se vuelve a pedir la lista
   useEffect(() => {
     let vigente = true // evita pintar respuestas viejas
-    buscarProductos(consulta)
+    buscarProductos(consulta, tipo)
       .then((productos) => {
-        if (vigente) setResultado({ consulta, productos, hayError: false })
+        if (vigente) {
+          setResultado({ consulta, tipo, productos, hayError: false })
+        }
       })
       .catch(() => {
-        if (vigente) setResultado({ consulta, productos: [], hayError: true })
+        if (vigente) {
+          setResultado({ consulta, tipo, productos: [], hayError: true })
+        }
       })
     return () => {
       vigente = false
     }
-  }, [consulta])
+  }, [consulta, tipo])
 
-  // "Cargando" mientras el resultado guardado es de otra consulta
-  const cargando = resultado.consulta !== consulta
+  // "Cargando" mientras el resultado guardado es de otros filtros
+  const cargando = resultado.consulta !== consulta || resultado.tipo !== tipo
   const { productos, hayError } = resultado
 
   const cantidad = productos.length
-  const resumen = consulta
-    ? `${cantidad} ${cantidad === 1 ? 'resultado' : 'resultados'} para “${consulta}”`
+  const textoTipo = TIPOS_PRODUCTO.find((t) => t.id === tipo)?.texto
+  const filtros = [
+    consulta && `para “${consulta}”`,
+    textoTipo && `de tipo “${textoTipo}”`,
+  ]
+    .filter(Boolean)
+    .join(' ')
+  const resumen = filtros
+    ? `${cantidad} ${cantidad === 1 ? 'resultado' : 'resultados'} ${filtros}`
     : `${cantidad} productos`
 
   return (
@@ -49,6 +64,7 @@ function CatalogPage() {
 
       <div className="catalogo__contenido">
         <SearchBar onBuscar={setConsulta} onLimpiar={() => setConsulta('')} />
+        <TypeFilterChips tipo={tipo} onCambiar={setTipo} />
 
         {cargando && <p className="catalogo__mensaje">Cargando…</p>}
 
