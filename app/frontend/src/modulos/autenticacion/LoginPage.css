@@ -96,6 +96,11 @@
   outline-offset: 1px;
 }
 
+/* Credenciales rechazadas: no se dice cuál de los dos campos falló */
+.login__entrada[aria-invalid='true'] {
+  border-color: var(--color-acento);
+}
+
 .login__error {
   padding: 0.75rem 1rem;
   border-radius: var(--radio);

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { Link, Navigate, useNavigate } from 'react-router'
 import {
   IconoCandado,
@@ -6,7 +6,7 @@ import {
   IconoCorreo,
   IconoVolver,
 } from '../../compartido/componentes/Iconos.jsx'
-import { llamarApi } from '../../compartido/servicios/api.js'
+import { ErrorApi, llamarApi } from '../../compartido/servicios/api.js'
 import {
   guardarToken,
   haySesion,
@@ -16,23 +16,28 @@ import './LoginPage.css'
 const DATOS_INICIALES = { email: '', password: '' }
 
 const MENSAJE_GENERAL = 'No pudimos iniciar sesión. Inténtalo de nuevo.'
+const MENSAJE_CREDENCIALES = 'Correo o contraseña incorrectos.'
 
 function LoginPage() {
   const navigate = useNavigate()
+  const campoClave = useRef(null)
   const [datos, setDatos] = useState(DATOS_INICIALES)
   const [error, setError] = useState(null)
+  const [credencialesInvalidas, setCredencialesInvalidas] = useState(false)
   const [enviando, setEnviando] = useState(false)
 
   if (haySesion()) return <Navigate to="/home" replace />
 
   function actualizar(evento) {
     const { name, value } = evento.target
+    setCredencialesInvalidas(false)
     setDatos((previos) => ({ ...previos, [name]: value }))
   }
 
   async function enviar(evento) {
     evento.preventDefault()
     setError(null)
+    setCredencialesInvalidas(false)
     setEnviando(true)
     try {
       const { token } = await llamarApi('/auth/login', {
@@ -41,8 +46,15 @@ function LoginPage() {
       })
       guardarToken(token)
       navigate('/home', { replace: true })
-    } catch {
-      setError(MENSAJE_GENERAL)
+    } catch (fallo) {
+      if (fallo instanceof ErrorApi && fallo.estado === 401) {
+        setError(fallo.cuerpo?.message ?? MENSAJE_CREDENCIALES)
+        setCredencialesInvalidas(true)
+        setDatos((previos) => ({ ...previos, password: '' }))
+        campoClave.current?.focus()
+      } else {
+        setError(MENSAJE_GENERAL)
+      }
       setEnviando(false)
     }
   }
@@ -84,6 +96,8 @@ function LoginPage() {
               value={datos.email}
               onChange={actualizar}
               aria-required="true"
+              aria-invalid={credencialesInvalidas ? 'true' : undefined}
+              aria-describedby={credencialesInvalidas ? 'login-error' : undefined}
             />
           </div>
         </div>
@@ -95,6 +109,7 @@ function LoginPage() {
           <div className="login__control">
             <IconoCandado />
             <input
+              ref={campoClave}
               id="login-clave"
               className="login__entrada"
               type="password"
@@ -103,12 +118,14 @@ function LoginPage() {
               value={datos.password}
               onChange={actualizar}
               aria-required="true"
+              aria-invalid={credencialesInvalidas ? 'true' : undefined}
+              aria-describedby={credencialesInvalidas ? 'login-error' : undefined}
             />
           </div>
         </div>
 
         {error && (
-          <div className="login__error" role="alert">
+          <div id="login-error" className="login__error" role="alert">
             {error}
           </div>
         )}
