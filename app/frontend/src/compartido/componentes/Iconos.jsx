@@ -69,3 +69,19 @@ export function IconoContinuar() {
     </Icono>
   )
 }
+export function IconoBuscar() {
+  return (
+    <Icono>
+      <circle cx="11" cy="11" r="8" />
+      <path d="m21 21-4.3-4.3" />
+    </Icono>
+  )
+}
+
+export function IconoCerrar() {
+  return (
+    <Icono>
+      <path d="M18 6 6 18M6 6l12 12" />
+    </Icono>
+  )
+}
