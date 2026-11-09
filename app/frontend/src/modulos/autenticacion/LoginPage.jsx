@@ -4,8 +4,10 @@ import {
   IconoCandado,
   IconoContinuar,
   IconoCorreo,
+  IconoEscudo,
   IconoVolver,
 } from '../../compartido/componentes/Iconos.jsx'
+import MarcaAntojos from '../../compartido/componentes/MarcaAntojos.jsx'
 import { ErrorApi, llamarApi } from '../../compartido/servicios/api.js'
 import {
   guardarToken,
@@ -69,13 +71,13 @@ function LoginPage() {
         >
           <IconoVolver />
         </Link>
-        <p className="login__barra-titulo">Iniciar sesión</p>
+        <MarcaAntojos />
       </header>
 
-      <h1 className="login__titulo">Qué bueno verte</h1>
+      <p className="login__antetitulo">Acceso UPB</p>
+      <h1 className="login__titulo">Qué bueno tenerte de vuelta.</h1>
       <p className="login__subtitulo">
-        Entra con tu correo institucional para seguir comprando y ofreciendo
-        dentro de la universidad.
+        Ingresa con tu correo institucional para continuar en la comunidad.
       </p>
 
       <form className="login__formulario" onSubmit={enviar} noValidate>
@@ -124,6 +126,23 @@ function LoginPage() {
           </div>
         </div>
 
+        {/* Solo visuales: la funcionalidad llega con la ANTOJOS-44 (release 2) */}
+        <div className="login__opciones">
+          <label className="login__recordarme">
+            <input className="login__casilla" type="checkbox" disabled />
+            <span className="login__opcion">
+              Recordarme
+              <span className="login__proximamente">Próximamente</span>
+            </span>
+          </label>
+          <span className="login__opcion login__opcion--derecha">
+            <span className="login__olvido" aria-disabled="true">
+              Olvidé mi contraseña
+            </span>
+            <span className="login__proximamente">Próximamente</span>
+          </span>
+        </div>
+
         {error && (
           <div id="login-error" className="login__error" role="alert">
             {error}
@@ -142,11 +161,16 @@ function LoginPage() {
       </form>
 
       <p className="login__pregunta">
-        ¿No tienes cuenta?{' '}
+        ¿Primera vez aquí?{' '}
         <Link className="login__enlace" to="/register">
-          Crea una
+          Crear cuenta
         </Link>
       </p>
+
+      <div className="login__aviso">
+        <IconoEscudo />
+        <p>Tu cuenta verifica que haces parte de la comunidad UPB.</p>
+      </div>
     </main>
   )
 }
