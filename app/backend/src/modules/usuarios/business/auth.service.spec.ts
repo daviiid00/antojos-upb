@@ -189,3 +189,35 @@ describe('AuthService.login', () => {
     expect(bcrypt.getRounds(hashComparado)).toBe(rondasDeRegistro);
   });
 });
+
+describe('AuthService.obtenerSesion', () => {
+  let repositorio: RepositorioSimulado;
+  let servicio: AuthService;
+
+  beforeEach(() => {
+    ({ repositorio, servicio } = montar());
+  });
+
+  it('devuelve los datos públicos del usuario y nunca el passwordHash', async () => {
+    repositorio.findOneBy.mockResolvedValue(usuarioCon('hash-secreto'));
+
+    const sesion = await servicio.obtenerSesion(7);
+
+    expect(repositorio.findOneBy).toHaveBeenCalledWith({ id: 7 });
+    expect(sesion).toEqual({
+      id: 7,
+      name: datos.name,
+      email: datos.email,
+      campus: datos.campus,
+      universityLink: datos.universityLink,
+    });
+    expect(sesion).not.toHaveProperty('passwordHash');
+  });
+
+  it('responde 401 si el id ya no existe', async () => {
+    const sesion = servicio.obtenerSesion(999);
+
+    await expect(sesion).rejects.toThrow(UnauthorizedException);
+    await expect(sesion).rejects.toThrow('Sesión no válida o vencida.');
+  });
+});

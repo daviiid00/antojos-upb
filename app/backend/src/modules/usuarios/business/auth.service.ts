@@ -7,6 +7,7 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import bcrypt from 'bcrypt';
 import { QueryFailedError, Repository } from 'typeorm';
+import { SESION_NO_VALIDA } from '../../../shared/auth/jwt-auth.guard.js';
 import { Usuario } from '../data/usuario.entity.js';
 import type { LoginDto } from '../presentation/dto/login.dto.js';
 import type { RegistroDto } from '../presentation/dto/registro.dto.js';
@@ -18,6 +19,11 @@ const CREDENCIALES_INCORRECTAS = 'Correo o contraseña incorrectos.';
 // RONDAS_BCRYPT: así un correo inexistente tarda lo mismo que uno real.
 const HASH_FALSO =
   '$2b$10$YfBy0a4DvtDeV6L8EdxVsuyqR45uPV4olucGE94COMrHzcpVtEuZO';
+
+export type SesionUsuario = Pick<
+  Usuario,
+  'id' | 'name' | 'email' | 'campus' | 'universityLink'
+>;
 
 // En users el único índice único (además de la llave primaria) es
 // UQ_users_email, así que un ER_DUP_ENTRY al insertar es un correo repetido.
@@ -78,6 +84,19 @@ export class AuthService {
     }
 
     return this.firmarToken(usuario);
+  }
+
+  async obtenerSesion(id: number): Promise<SesionUsuario> {
+    const usuario = await this.usuarios.findOneBy({ id });
+    if (!usuario) throw new UnauthorizedException(SESION_NO_VALIDA);
+
+    return {
+      id: usuario.id,
+      name: usuario.name,
+      email: usuario.email,
+      campus: usuario.campus,
+      universityLink: usuario.universityLink,
+    };
   }
 
   private async firmarToken(usuario: Usuario): Promise<{ token: string }> {

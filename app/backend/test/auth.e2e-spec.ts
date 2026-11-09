@@ -1,5 +1,13 @@
-import type { INestApplication } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  type INestApplication,
+  Module,
+  type Type,
+  UseGuards,
+} from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 import { Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import request from 'supertest';
@@ -7,6 +15,11 @@ import type { App } from 'supertest/types.js';
 import { QueryFailedError } from 'typeorm';
 import { Usuario } from '../src/modules/usuarios/data/usuario.entity.js';
 import { UsuariosModule } from '../src/modules/usuarios/usuarios.module.js';
+import { JwtAuthGuard } from '../src/shared/auth/jwt-auth.guard.js';
+import {
+  UsuarioActual,
+  type UsuarioAutenticado,
+} from '../src/shared/auth/usuario-actual.decorator.js';
 import { crearValidationPipe } from '../src/shared/config/validacion.js';
 
 const registroValido = {
@@ -51,6 +64,7 @@ function crearRepositorio(): RepositorioSimulado {
 
 async function crearApp(
   repositorio: RepositorioSimulado,
+  modulos: Array<Type<unknown>> = [UsuariosModule],
 ): Promise<INestApplication<App>> {
   const modulo = await Test.createTestingModule({
     imports: [
@@ -60,7 +74,7 @@ async function crearApp(
         ignoreEnvFile: true,
         load: [() => ({ JWT_SECRET: 'x'.repeat(32), JWT_EXPIRES_IN: '1d' })],
       }),
-      UsuariosModule,
+      ...modulos,
     ],
   })
     .overrideProvider(getRepositoryToken(Usuario))
@@ -284,5 +298,120 @@ describe('POST /auth/login (e2e)', () => {
     expect(repositorio.findOneBy).toHaveBeenCalledWith({
       email: 'david@upb.edu.co',
     });
+  });
+});
+
+describe('GET /auth/session (e2e)', () => {
+  let app: INestApplication<App>;
+  let tokenDeRegistro: string;
+
+  beforeEach(async () => {
+    app = await crearApp(crearRepositorio());
+    const registro = await request(app.getHttpServer())
+      .post('/auth/register')
+      .send(registroValido)
+      .expect(201);
+    tokenDeRegistro = registro.body.token;
+  });
+
+  afterEach(async () => {
+    await app.close();
+  });
+
+  const consultarSesion = (token?: string) => {
+    const peticion = request(app.getHttpServer()).get('/auth/session');
+    return token ? peticion.set('Authorization', `Bearer ${token}`) : peticion;
+  };
+
+  it('con el token de /auth/login responde 200 sin passwordHash', async () => {
+    const login = await request(app.getHttpServer())
+      .post('/auth/login')
+      .send({
+        email: registroValido.email,
+        password: registroValido.password,
+      })
+      .expect(200);
+
+    const respuesta = await consultarSesion(login.body.token).expect(200);
+
+    expect(respuesta.body).toEqual({
+      id: 1,
+      name: registroValido.name,
+      email: registroValido.email,
+      campus: registroValido.campus,
+      universityLink: registroValido.universityLink,
+    });
+    expect(respuesta.body).not.toHaveProperty('passwordHash');
+  });
+
+  it('acepta el token que devuelve /auth/register', async () => {
+    const respuesta = await consultarSesion(tokenDeRegistro).expect(200);
+
+    expect(respuesta.body.email).toBe(registroValido.email);
+  });
+
+  it('responde 401 sin token', async () => {
+    const respuesta = await consultarSesion().expect(401);
+
+    expect(respuesta.body.message).toBe('Sesión no válida o vencida.');
+  });
+
+  it('responde 401 con un token manipulado', async () => {
+    const [cabecera, cuerpo, firma] = tokenDeRegistro.split('.');
+    const firmaAlterada = `${firma.startsWith('a') ? 'b' : 'a'}${firma.slice(1)}`;
+
+    await consultarSesion(`${cabecera}.${cuerpo}.${firmaAlterada}`).expect(401);
+  });
+
+  it('responde 401 con el token de un usuario que ya no existe', async () => {
+    const token = await app
+      .get(JwtService)
+      .signAsync({ sub: 999, email: 'borrado@upb.edu.co' });
+
+    const respuesta = await consultarSesion(token).expect(401);
+
+    expect(respuesta.body.message).toBe('Sesión no válida o vencida.');
+  });
+});
+
+// Comprueba lo que promete el README: basta con imports: [UsuariosModule].
+@Controller('protegida')
+class ControladorDeOtroModulo {
+  @Get()
+  @UseGuards(JwtAuthGuard)
+  leer(@UsuarioActual() usuario: UsuarioAutenticado) {
+    return usuario;
+  }
+}
+
+@Module({
+  imports: [UsuariosModule],
+  controllers: [ControladorDeOtroModulo],
+})
+class OtroModulo {}
+
+describe('JwtAuthGuard desde otro módulo (e2e)', () => {
+  let app: INestApplication<App>;
+
+  beforeEach(async () => {
+    app = await crearApp(crearRepositorio(), [OtroModulo]);
+  });
+
+  afterEach(async () => {
+    await app.close();
+  });
+
+  it('protege la ruta sin configurar JWT otra vez', async () => {
+    const token = await app
+      .get(JwtService)
+      .signAsync({ sub: 7, email: 'david@upb.edu.co' });
+
+    await request(app.getHttpServer()).get('/protegida').expect(401);
+    const respuesta = await request(app.getHttpServer())
+      .get('/protegida')
+      .set('Authorization', `Bearer ${token}`)
+      .expect(200);
+
+    expect(respuesta.body).toEqual({ id: 7, email: 'david@upb.edu.co' });
   });
 });

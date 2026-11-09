@@ -57,3 +57,20 @@ npm test            # pruebas unitarias (no necesitan MySQL)
 npm run test:e2e    # pruebas de los endpoints con el repositorio simulado
 npm run lint
 ```
+
+## Proteger una ruta con el guard
+
+Agrega `imports: [UsuariosModule]` en el módulo de tu feature (trae JWT ya configurado) y usa:
+
+```ts
+import { JwtAuthGuard } from '../../../shared/auth/jwt-auth.guard.js';
+import { UsuarioActual, type UsuarioAutenticado } from '../../../shared/auth/usuario-actual.decorator.js';
+
+@Get('mias')
+@UseGuards(JwtAuthGuard)
+listarMias(@UsuarioActual() usuario: UsuarioAutenticado) {
+  return this.productos.listarDe(usuario.id);
+}
+```
+
+El cliente envía `Authorization: Bearer <token>`; sin un token válido la ruta responde 401.
