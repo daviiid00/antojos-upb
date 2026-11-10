@@ -1,4 +1,5 @@
 import { Navigate, Route, Routes } from 'react-router'
+import AppLayout from './compartido/componentes/AppLayout.jsx'
 import Proximamente from './compartido/componentes/Proximamente.jsx'
 import RegisterPage from './modulos/autenticacion/RegisterPage.jsx'
 import WelcomePage from './modulos/autenticacion/WelcomePage.jsx'
@@ -7,16 +8,27 @@ import CatalogPage from './modulos/catalogo/CatalogPage.jsx'
 function App() {
   return (
     <Routes>
+      {/* Pantallas SIN barra de navegación */}
       <Route path="/" element={<Navigate to="/welcome" replace />} />
       <Route path="/welcome" element={<WelcomePage />} />
       <Route path="/register" element={<RegisterPage />} />
-      <Route path="/explorar" element={<CatalogPage />} />
-            <Route
-        path="/producto/:id"
-        element={<Proximamente titulo="Detalle del producto" />}
-      />
       <Route path="/login" element={<Proximamente titulo="Iniciar sesión" />} />
-      <Route path="/home" element={<Proximamente titulo="Inicio" />} />
+
+      {/* Pantallas CON barra de navegación */}
+      <Route element={<AppLayout />}>
+        <Route path="/home" element={<Proximamente titulo="Inicio" />} />
+        <Route path="/explorar" element={<CatalogPage />} />
+        <Route
+          path="/producto/:id"
+          element={<Proximamente titulo="Detalle del producto" />}
+        />
+        <Route path="/publicar" element={<Proximamente titulo="Publicar" />} />
+        <Route
+          path="/solicitudes"
+          element={<Proximamente titulo="Solicitudes" />}
+        />
+        <Route path="/perfil" element={<Proximamente titulo="Perfil" />} />
+      </Route>
     </Routes>
   )
 }

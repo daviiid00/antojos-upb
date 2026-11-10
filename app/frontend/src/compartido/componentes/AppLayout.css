@@ -1,0 +1,8 @@
+/* Deja espacio abajo para que la barra flotante no tape el contenido */
+.layout {
+  padding-bottom: 6.5rem;
+}
+
+.layout > main {
+  min-height: calc(100dvh - 6.5rem);
+}
