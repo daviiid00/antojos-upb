@@ -14,9 +14,11 @@ function App() {
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/login" element={<Proximamente titulo="Iniciar sesión" />} />
 
+      {/* Inicio es del release 2: por ahora /home lleva a Explorar */}
+      <Route path="/home" element={<Navigate to="/explorar" replace />} />
+
       {/* Pantallas CON barra de navegación */}
       <Route element={<AppLayout />}>
-        <Route path="/home" element={<Proximamente titulo="Inicio" />} />
         <Route path="/explorar" element={<CatalogPage />} />
         <Route
           path="/producto/:id"

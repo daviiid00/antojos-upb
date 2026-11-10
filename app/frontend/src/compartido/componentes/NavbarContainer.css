@@ -25,9 +25,8 @@
 
 .navegacion__lista {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 0.125rem;
-  align-items: end;
   padding: 0;
   list-style: none;
 }
@@ -51,6 +50,13 @@
     transform 0.15s ease;
 }
 
+/* Caja del ícono: misma altura en todos para que los textos queden alineados */
+.navegacion__icono {
+  display: grid;
+  place-items: center;
+  height: 1.75rem;
+}
+
 .navegacion__enlace:hover {
   background-color: rgba(255, 255, 255, 0.12);
   color: var(--nav-texto);
@@ -70,35 +76,33 @@
   stroke-width: 2.25;
 }
 
-/* Botón central "Publicar": elevado, con aro del color de la barra */
-.navegacion__enlace--destacado,
-.navegacion__enlace--destacado:hover,
+/* "Publicar": en la misma fila, con una píldora azul detrás del "+" */
+.navegacion__enlace--destacado .navegacion__icono {
+  width: 3rem;
+  border-radius: 999px;
+  background: linear-gradient(160deg, #c3e6fa, var(--nav-destacado));
+  color: var(--color-texto);
+  box-shadow: 0 2px 6px rgba(58, 47, 44, 0.25);
+  transition: transform 0.2s ease;
+}
+
+.navegacion__enlace--destacado .icono {
+  stroke-width: 2.25;
+}
+
+.navegacion__enlace--destacado:hover .navegacion__icono {
+  transform: scale(1.06);
+}
+
+/* Cuando se está en Publicar: sin fondo en el enlace y aro amarillo en la píldora */
 .navegacion__enlace--destacado.navegacion__enlace--activo {
   background-color: transparent;
 }
 
-.navegacion__enlace--destacado {
-  padding-top: 0;
-  color: var(--nav-texto);
-}
-
-.navegacion__enlace--destacado .navegacion__icono {
-  display: grid;
-  place-items: center;
-  width: 3rem;
-  height: 3rem;
-  margin-top: -1.5rem;
-  border-radius: 1rem;
-  background: linear-gradient(160deg, #c3e6fa, var(--nav-destacado));
-  color: var(--color-texto);
+.navegacion__enlace--destacado.navegacion__enlace--activo .navegacion__icono {
   box-shadow:
-    0 0 0 4px var(--nav-fondo),
-    0 8px 16px rgba(58, 47, 44, 0.3);
-  transition: transform 0.2s ease;
-}
-
-.navegacion__enlace--destacado:hover .navegacion__icono {
-  transform: translateY(-2px);
+    0 0 0 2px var(--nav-activo),
+    0 2px 6px rgba(58, 47, 44, 0.25);
 }
 
 .navegacion__enlace:focus-visible {
@@ -112,7 +116,8 @@
     transition: none;
   }
 
-  .navegacion__enlace:active {
+  .navegacion__enlace:active,
+  .navegacion__enlace--destacado:hover .navegacion__icono {
     transform: none;
   }
 }

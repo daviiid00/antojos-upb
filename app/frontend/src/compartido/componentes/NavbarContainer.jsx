@@ -1,16 +1,15 @@
 import { NavLink } from 'react-router'
 import {
   IconoExplorar,
-  IconoInicio,
   IconoMas,
   IconoPerfil,
   IconoSolicitudes,
 } from './IconosNavegacion.jsx'
 import './NavbarContainer.css'
 
-// Cada acceso: ruta, texto e ícono. "Publicar" es el botón central destacado.
+// Cada acceso: ruta, texto e ícono. "Publicar" es el botón destacado.
+// Inicio no está: esa pantalla pertenece al release 2.
 const ACCESOS = [
-  { ruta: '/home', texto: 'Inicio', Icono: IconoInicio },
   { ruta: '/explorar', texto: 'Explorar', Icono: IconoExplorar },
   { ruta: '/publicar', texto: 'Publicar', Icono: IconoMas, destacado: true },
   { ruta: '/solicitudes', texto: 'Solicitudes', Icono: IconoSolicitudes },

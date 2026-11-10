@@ -1,8 +1,17 @@
-/* Deja espacio abajo para que la barra flotante no tape el contenido */
 .layout {
+  position: relative;
+  /* Deja espacio abajo para que la barra flotante no tape el contenido */
   padding-bottom: 6.5rem;
 }
 
 .layout > main {
   min-height: calc(100dvh - 6.5rem);
+}
+
+/* Nombre del usuario: arriba a la derecha, alineado con la columna de la app */
+.layout > .usuario {
+  position: absolute;
+  top: 1.375rem;
+  right: max(1.25rem, calc((100% - 28rem) / 2 + 1.25rem));
+  z-index: 5;
 }
