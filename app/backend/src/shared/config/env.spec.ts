@@ -11,6 +11,9 @@ const entornoValido = {
   JWT_SECRET: SECRETO_VALIDO,
   JWT_EXPIRES_IN: '1d',
   FRONTEND_URL: 'http://localhost:5173',
+  CLOUDINARY_CLOUD_NAME : 'azsn0arm',
+  CLOUDINARY_API_KEY: '371932329131256',
+  CLOUDINARY_API_SECRET: 'WV05EjliYaIq6GdkeDsXXH6sqKg',
 };
 
 describe('validarEntorno', () => {

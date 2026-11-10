@@ -18,10 +18,12 @@ export async function llamarApi(ruta, { metodo = 'GET', cuerpo } = {}) {
     throw new Error(mensaje)
   }
 
+  const esArchivo = cuerpo instanceof FormData
   const respuesta = await fetch(`${URL_BASE}${ruta}`, {
     method: metodo,
-    headers: cuerpo ? { 'Content-Type': 'application/json' } : undefined,
-    body: cuerpo ? JSON.stringify(cuerpo) : undefined,
+    headers:
+    cuerpo && !esArchivo ? { 'Content-Type': 'application/json' } : undefined,
+    body: !cuerpo ? undefined : esArchivo ? cuerpo : JSON.stringify(cuerpo),
   })
   const datos = await respuesta.json().catch(() => null)
   if (!respuesta.ok) throw new ErrorApi(respuesta.status, datos)
