@@ -1,0 +1,95 @@
+/* Dos columnas mientras quepan; en pantallas muy angostas pasan a una */
+.cuadricula {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
+  gap: 0.75rem;
+  padding: 0;
+  list-style: none;
+}
+
+.tarjeta-producto {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 1.25rem;
+  background-color: var(--color-blanco);
+  box-shadow: 0 2px 10px rgba(58, 47, 44, 0.08);
+  color: inherit;
+  text-decoration: none;
+}
+
+.tarjeta-producto:hover {
+  box-shadow: 0 4px 14px rgba(58, 47, 44, 0.14);
+}
+
+.tarjeta-producto:focus-visible {
+  outline: 3px solid var(--color-acento);
+  outline-offset: 2px;
+}
+
+.tarjeta-producto__imagen {
+  width: 100%;
+  aspect-ratio: 6 / 5;
+  object-fit: cover;
+}
+
+/* Cuando el producto no trae imagen */
+.tarjeta-producto__imagen--vacia {
+  display: grid;
+  place-items: center;
+  background-color: var(--color-tarjeta-azul);
+  color: var(--color-texto-suave);
+  font-size: 0.8125rem;
+}
+
+.tarjeta-producto__cuerpo {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 0.75rem 0.875rem 0.875rem;
+}
+
+/* Nombre y vendedor en una sola línea, con "..." si no caben */
+.tarjeta-producto__nombre {
+  overflow: hidden;
+  font-size: 0.9375rem;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tarjeta-producto__vendedor {
+  overflow: hidden;
+  color: var(--color-texto-suave);
+  font-size: 0.75rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Precio a la izquierda y botón circular a la derecha */
+.tarjeta-producto__pie {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-top: auto;
+  padding-top: 0.625rem;
+}
+
+.tarjeta-producto__precio {
+  color: var(--color-acento);
+  font-size: 1.0625rem;
+  font-weight: 800;
+}
+
+.tarjeta-producto__flecha {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background-color: var(--color-tarjeta-rosa);
+  color: var(--color-acento);
+}
