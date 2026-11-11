@@ -13,6 +13,10 @@ function App() {
       <Route path="/welcome" element={<WelcomePage />} />
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/explorar" element={<CatalogPage />} />
+            <Route
+        path="/producto/:id"
+        element={<Proximamente titulo="Detalle del producto" />}
+      />
       <Route path="/login" element={<Proximamente titulo="Iniciar sesión" />} />
       <Route path="/home" element={<Proximamente titulo="Inicio" />} />
       <Route path="/publish" element={<PublicarProductoPage />} />
