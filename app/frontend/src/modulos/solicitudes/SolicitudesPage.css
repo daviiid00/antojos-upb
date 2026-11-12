@@ -1,0 +1,28 @@
+.solicitudes {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 28rem;
+  margin-inline: auto;
+  padding: 1.25rem 1.25rem 2rem;
+}
+
+.solicitudes__titulo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-texto);
+}
+
+.solicitudes__lista {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.solicitudes__mensaje {
+  color: var(--color-texto-suave);
+  font-size: 0.9375rem;
+}

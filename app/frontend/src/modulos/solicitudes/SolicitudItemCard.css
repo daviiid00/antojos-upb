@@ -1,0 +1,26 @@
+.solicitud-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  padding: 1rem;
+  background-color: var(--color-blanco);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio);
+}
+
+.solicitud-card__producto {
+  margin: 0;
+  font-size: 1.0625rem;
+  font-weight: 600;
+  color: var(--color-texto);
+}
+
+.solicitud-card__dato {
+  margin: 0;
+  font-size: 0.9375rem;
+  color: var(--color-texto-suave);
+}
+
+.solicitud-card .contacto {
+  margin-top: 0.5rem;
+}
