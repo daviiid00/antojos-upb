@@ -1,12 +1,20 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
-import { obtenerMisProductos } from '../../compartido/servicios/mis-productos';
+import {
+  eliminarMiProducto,
+  obtenerMisProductos,
+} from '../../compartido/servicios/mis-productos';
+import { DeleteProductModal } from './DeleteProductModal';
 import { ProductList } from './ProductList';
 
 export function MisPublicacionesContainer() {
   const [productos, setProductos] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
+
+  const [productoAEliminar, setProductoAEliminar] = useState(null);
+  const [eliminando, setEliminando] = useState(false);
+  const [errorEliminacion, setErrorEliminacion] = useState(null);
 
   useEffect(() => {
     let activo = true;
@@ -38,6 +46,33 @@ export function MisPublicacionesContainer() {
     };
   }, []);
 
+  function abrirModalEliminar(producto) {
+    setErrorEliminacion(null);
+    setProductoAEliminar(producto);
+  }
+
+  function cerrarModalEliminar() {
+    if (eliminando) return;
+    setProductoAEliminar(null);
+    setErrorEliminacion(null);
+  }
+
+  async function confirmarEliminacion(productoId) {
+    try {
+      setEliminando(true);
+      setErrorEliminacion(null);
+      await eliminarMiProducto(productoId);
+      setProductos((prev) => prev.filter((item) => item.id !== productoId));
+      setProductoAEliminar(null);
+    } catch (err) {
+      setErrorEliminacion(
+        err?.message || 'No se pudo eliminar la publicación. Intenta nuevamente.',
+      );
+    } finally {
+      setEliminando(false);
+    }
+  }
+
   if (cargando) {
     return <p className="perfil-mensaje">Cargando tus publicaciones...</p>;
   }
@@ -58,5 +93,20 @@ export function MisPublicacionesContainer() {
     return <p className="perfil-mensaje">Aún no tienes publicaciones activas.</p>;
   }
 
-  return <ProductList productos={productos} />;
+  return (
+    <>
+      <ProductList
+        productos={productos}
+        onSolicitarEliminar={abrirModalEliminar}
+      />
+
+      <DeleteProductModal
+        producto={productoAEliminar}
+        eliminando={eliminando}
+        error={errorEliminacion}
+        onConfirmar={confirmarEliminacion}
+        onCancelar={cerrarModalEliminar}
+      />
+    </>
+  );
 }

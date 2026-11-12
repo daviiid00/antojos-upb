@@ -1,4 +1,7 @@
 import {
+  Delete,
+  HttpCode,
+  HttpStatus,
   BadRequestException,
   Body,
   Controller,
@@ -23,6 +26,7 @@ import {
   type ProductoPublico,
 } from '../business/productos.service.js';
 import { CreateProductDto } from './dto/create-product.dto.js';
+import { UsuarioActual } from '../../../shared/auth/usuario-actual.decorator.js';
 
 const FORMATOS_PERMITIDOS = ['image/jpeg', 'image/png', 'image/webp'];
 const TAMANO_MAXIMO_BYTES = 5 * 1024 * 1024; // 5 MB
@@ -93,5 +97,15 @@ export class ProductosController {
   ): Promise<{ id: number }> {
     const producto = await this.productos.crear(datos, peticion.usuario.id);
     return { id: producto.id };
+  }
+  
+  @Delete(':id')
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async eliminar(
+    @Param('id', ParseIntPipe) id: number,
+    @UsuarioActual() usuario: UsuarioAutenticado,
+  ): Promise<void> {
+    await this.productos.eliminarLogico(id, usuario.id);
   }
 }

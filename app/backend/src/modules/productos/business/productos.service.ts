@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { v2 as cloudinary } from 'cloudinary';
@@ -86,6 +86,7 @@ export class ProductosService {
     const consulta = this.productos
       .createQueryBuilder('producto')
       .leftJoinAndSelect('producto.seller', 'vendedor')
+      .where('producto.status = :estado', { estado: 'ACTIVE' })
       .orderBy('producto.createdAt', 'DESC');
 
     // Barra de búsqueda: nombre o descripción
@@ -117,7 +118,7 @@ export class ProductosService {
   // GET /products/:id
   async obtenerPorId(id: number): Promise<ProductoPublico> {
     const producto = await this.productos.findOne({
-      where: { id },
+      where: { id, status: 'ACTIVE' },
       relations: { seller: true },
     });
     if (!producto) throw new NotFoundException('No encontramos este producto.');
@@ -129,5 +130,23 @@ export class ProductosService {
       where: { seller: { id: vendedorId }, status: 'ACTIVE' },
       order: { createdAt: 'DESC' },
     });
+  }
+
+ async eliminarLogico(productoId: number, vendedorId: number): Promise<void> {
+    const producto = await this.productos.findOne({
+      where: { id: productoId },
+      relations: { seller: true },
+    });
+
+    if (!producto || producto.status === 'DELETED') {
+      throw new NotFoundException('La publicación no existe o ya fue eliminada.');
+    }
+
+    if (producto.seller?.id !== vendedorId) {
+      throw new ForbiddenException('No tienes permiso para eliminar esta publicación.');
+    }
+
+    producto.status = 'DELETED';
+    await this.productos.save(producto);
   }
 }

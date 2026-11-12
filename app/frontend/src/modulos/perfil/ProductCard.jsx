@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { formatearPrecio, optimizarImagen } from '../../compartido/utilidades/formato';
 import './ProductCard.css';
 
-export function ProductCard({ producto }) {
+export function ProductCard({ producto, onSolicitarEliminar }) {
   const [errorImagen, setErrorImagen] = useState(false);
   const urlOptimizada = optimizarImagen(producto.image_url);
   const mostrarFallback = !urlOptimizada || errorImagen;
@@ -33,6 +33,15 @@ export function ProductCard({ producto }) {
           {formatearPrecio(producto.price)}
         </p>
       </div>
+
+      <button
+        type="button"
+        className="perfil-product-card__btn-eliminar"
+        onClick={() => onSolicitarEliminar(producto)}
+        aria-label={`Eliminar ${producto.name}`}
+      >
+        Eliminar
+      </button>
     </li>
   );
 }
