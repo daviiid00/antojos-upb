@@ -9,6 +9,7 @@ import { AuthService } from './auth.service.js';
 const datos: RegistroDto = {
   name: 'David Anaya',
   email: 'david@upb.edu.co',
+  phone: '3001234567',
   password: 'Antojos2026',
   campus: 'Medellín',
   universityLink: 'Estudiante',
@@ -29,6 +30,7 @@ const usuarioCon = (passwordHash: string) =>
     id: 7,
     name: datos.name,
     email: datos.email,
+    phone: '573001234567',
     passwordHash,
     campus: datos.campus,
     universityLink: datos.universityLink,
@@ -83,6 +85,12 @@ describe('AuthService.registrar', () => {
     expect(await bcrypt.compare(datos.password, guardado.passwordHash)).toBe(
       true,
     );
+  });
+
+  it('guarda el celular con el indicativo 57, listo para wa.me', async () => {
+    await servicio.registrar(datos);
+
+    expect(repositorio.save.mock.calls[0][0].phone).toBe('573001234567');
   });
 
   it('responde solo con { token }', async () => {
@@ -198,7 +206,7 @@ describe('AuthService.obtenerSesion', () => {
     ({ repositorio, servicio } = montar());
   });
 
-  it('devuelve los datos públicos del usuario y nunca el passwordHash', async () => {
+  it('devuelve los datos públicos del usuario, sin passwordHash ni celular', async () => {
     repositorio.findOneBy.mockResolvedValue(usuarioCon('hash-secreto'));
 
     const sesion = await servicio.obtenerSesion(7);
@@ -212,6 +220,7 @@ describe('AuthService.obtenerSesion', () => {
       universityLink: datos.universityLink,
     });
     expect(sesion).not.toHaveProperty('passwordHash');
+    expect(sesion).not.toHaveProperty('phone');
   });
 
   it('responde 401 si el id ya no existe', async () => {

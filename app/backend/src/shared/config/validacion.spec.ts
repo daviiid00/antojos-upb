@@ -5,6 +5,7 @@ import { crearValidationPipe } from './validacion.js';
 const registroValido = {
   name: 'David Anaya',
   email: 'david@upb.edu.co',
+  phone: '3001234567',
   password: 'Antojos2026',
   campus: 'Medellín',
   universityLink: 'Estudiante',

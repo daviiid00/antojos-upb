@@ -8,6 +8,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import bcrypt from 'bcrypt';
 import { QueryFailedError, Repository } from 'typeorm';
 import { SESION_NO_VALIDA } from '../../../shared/auth/jwt-auth.guard.js';
+import { INDICATIVO_COLOMBIA } from '../../../shared/constantes/usuario.js';
 import { Usuario } from '../data/usuario.entity.js';
 import type { LoginDto } from '../presentation/dto/login.dto.js';
 import type { RegistroDto } from '../presentation/dto/registro.dto.js';
@@ -55,6 +56,7 @@ export class AuthService {
         this.usuarios.create({
           name: datos.name,
           email: datos.email,
+          phone: `${INDICATIVO_COLOMBIA}${datos.phone}`,
           passwordHash,
           campus: datos.campus,
           universityLink: datos.universityLink,

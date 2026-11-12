@@ -45,6 +45,15 @@ export function IconoCorreo() {
   )
 }
 
+export function IconoCelular() {
+  return (
+    <Icono>
+      <rect x="6" y="2" width="12" height="20" rx="2" />
+      <path d="M11 18h2" />
+    </Icono>
+  )
+}
+
 export function IconoCandado() {
   return (
     <Icono>

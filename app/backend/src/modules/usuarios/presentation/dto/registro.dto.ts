@@ -11,7 +11,9 @@ import {
   MinLength,
 } from 'class-validator';
 import {
+  CELULAR_COLOMBIANO,
   DOMINIO_INSTITUCIONAL,
+  MENSAJE_CELULAR,
   SEDES,
   type Sede,
   VINCULOS_UNIVERSITARIOS,
@@ -43,6 +45,14 @@ export class RegistroDto {
   })
   @MaxLength(255, { message: 'El correo no puede superar 255 caracteres.' })
   email: string;
+
+  // "300 123-4567" llega como "3001234567". El servicio le agrega el 57.
+  @Transform(({ value }) =>
+    typeof value === 'string' ? value.replaceAll(/[\s-]/g, '') : value,
+  )
+  @IsString({ message: 'El celular es obligatorio.' })
+  @Matches(CELULAR_COLOMBIANO, { message: MENSAJE_CELULAR })
+  phone: string;
 
   @IsString({ message: 'La contraseña es obligatoria.' })
   @MinLength(8, { message: 'La contraseña debe tener al menos 8 caracteres.' })
