@@ -5,6 +5,7 @@ import { ErrorApi } from '../../compartido/servicios/api.js'
 import { obtenerProducto } from '../../compartido/servicios/productos.js'
 import ProductImageGallery from './ProductImageGallery.jsx'
 import ProductInfo from './ProductInfo.jsx'
+import WhatsAppRequestButton from './WhatsAppRequestButton.jsx'
 import './ProductDetailContainer.css'
 
 const MENSAJE_NO_ENCONTRADO = 'No encontramos este producto.'
@@ -71,6 +72,7 @@ function ProductDetailContainer() {
             nombre={producto.name}
           />
           <ProductInfo producto={producto} />
+          <WhatsAppRequestButton producto={producto} />
         </>
       )}
     </main>

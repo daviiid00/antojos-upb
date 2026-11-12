@@ -1,0 +1,42 @@
+.solicitud {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.solicitud__boton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.875rem;
+  border: none;
+  border-radius: var(--radio);
+  background-color: var(--color-primario);
+  color: var(--color-blanco);
+  font: inherit;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.solicitud__boton:hover:not(:disabled) {
+  filter: brightness(1.1);
+}
+
+.solicitud__boton:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.solicitud__boton:focus-visible {
+  outline: 3px solid var(--color-acento);
+  outline-offset: 3px;
+}
+
+.solicitud__aviso {
+  color: var(--color-acento);
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-align: center;
+}

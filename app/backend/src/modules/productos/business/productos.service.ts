@@ -17,6 +17,7 @@ export interface ProductoPublico {
   stock: number;
   imageUrl: string;
   seller: string;
+  sellerPhone: string | null;
 }
 
 function aPublico(producto: Producto): ProductoPublico {
@@ -28,6 +29,7 @@ function aPublico(producto: Producto): ProductoPublico {
     stock: producto.stock,
     imageUrl: producto.imageUrl,
     seller: producto.seller.name,
+    sellerPhone: producto.seller.phone ?? null,
   };
 }
 
