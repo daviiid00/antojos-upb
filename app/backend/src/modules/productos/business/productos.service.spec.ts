@@ -37,6 +37,18 @@ describe('ProductosService.obtenerPorId', () => {
       repositorio as unknown as Repository<Producto>,
     );
   });
+  
+  it('incluye el WhatsApp del vendedor, y null si no tiene', async () => {
+    repositorio.findOne.mockResolvedValueOnce(productoGuardado);
+    expect((await servicio.obtenerPorId(7)).sellerWhatsapp).toBe('3001234567');
+
+    repositorio.findOne.mockResolvedValueOnce({
+      ...productoGuardado,
+      seller: { ...productoGuardado.seller, whatsapp: null },
+    });
+    expect((await servicio.obtenerPorId(7)).sellerWhatsapp).toBeNull();
+  });
+
 
   it('devuelve el producto con solo el nombre del vendedor', async () => {
     repositorio.findOne.mockResolvedValue(productoGuardado);
@@ -57,3 +69,5 @@ describe('ProductosService.obtenerPorId', () => {
     await expect(servicio.obtenerPorId(999)).rejects.toThrow(NotFoundException);
   });
 });
+
+  
