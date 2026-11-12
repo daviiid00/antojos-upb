@@ -1,12 +1,20 @@
 import {
   BadRequestException,
+  Body,
   Controller,
   Post,
+  Req,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ProductosService } from '../business/productos.service.js';
+import {
+  JwtAuthGuard,
+  type UsuarioAutenticado,
+} from '../../../shared/seguridad/jwt-auth.guard.js';
+import { CreateProductDto } from './dto/create-product.dto.js';
 
 const FORMATOS_PERMITIDOS = ['image/jpeg', 'image/png', 'image/webp'];
 const TAMANO_MAXIMO_BYTES = 5 * 1024 * 1024; // 5 MB
@@ -43,5 +51,15 @@ export class ProductosController {
       throw new BadRequestException(MENSAJE_TAMANO);
     }
     return this.productos.subirImagen(archivo);
+  }
+
+    @Post()
+  @UseGuards(JwtAuthGuard)
+  async crear(
+    @Body() datos: CreateProductDto,
+    @Req() peticion: { usuario: UsuarioAutenticado },
+  ): Promise<{ id: number }> {
+    const producto = await this.productos.crear(datos, peticion.usuario.id);
+    return { id: producto.id };
   }
 }
