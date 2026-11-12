@@ -16,10 +16,8 @@ function App() {
       <Route path="/" element={<Navigate to="/welcome" replace />} />
       <Route path="/welcome" element={<WelcomePage />} />
       <Route path="/register" element={<RegisterPage />} />
-      <Route path="/login" element={<Proximamente titulo="Iniciar sesión" />} />
-
-      {/* Inicio es del release 2: por ahora /home lleva a Explorar */}
-      <Route path="/home" element={<Navigate to="/explorar" replace />} />
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/home" element={<HomePage />} />
 
       {/* Pantallas CON barra de navegación */}
       <Route element={<AppLayout />}>
@@ -35,13 +33,6 @@ function App() {
         />
         <Route path="/perfil" element={<Proximamente titulo="Perfil" />} />
       </Route>
-      <Route path="/explorar" element={<CatalogPage />} />
-      <Route
-        path="/producto/:id"
-        element={<Proximamente titulo="Detalle del producto" />}
-      />
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/home" element={<HomePage />} />
       <Route path="/publish" element={<PublicarProductoPage />} />
     </Routes>
   )
