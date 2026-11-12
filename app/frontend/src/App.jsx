@@ -4,8 +4,10 @@ import Proximamente from './compartido/componentes/Proximamente.jsx'
 import LoginPage from './modulos/autenticacion/LoginPage.jsx'
 import RegisterPage from './modulos/autenticacion/RegisterPage.jsx'
 import WelcomePage from './modulos/autenticacion/WelcomePage.jsx'
+import PublicarProductoPage from './modulos/publicarProducto/PublicarProductoPage.jsx'
 import CatalogPage from './modulos/catalogo/CatalogPage.jsx'
 import HomePage from './modulos/inicio/HomePage.jsx'
+
 
 function App() {
   return (
@@ -40,6 +42,7 @@ function App() {
       />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/home" element={<HomePage />} />
+      <Route path="/publish" element={<PublicarProductoPage />} />
     </Routes>
   )
 }
