@@ -1,0 +1,10 @@
+.resultados {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.resultados__mensaje {
+  color: var(--color-texto-suave);
+  font-size: 0.9375rem;
+}

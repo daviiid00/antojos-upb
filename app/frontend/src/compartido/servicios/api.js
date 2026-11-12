@@ -1,3 +1,5 @@
+import { obtenerToken } from '../sesion-rutas/sesion.js'
+
 const URL_BASE = import.meta.env.VITE_API_URL
 
 // Error con el código HTTP y el cuerpo que respondió el backend.
@@ -18,11 +20,15 @@ export async function llamarApi(ruta, { metodo = 'GET', cuerpo } = {}) {
     throw new Error(mensaje)
   }
 
-  const esArchivo = cuerpo instanceof FormData
+const esArchivo = cuerpo instanceof FormData
+  const token = obtenerToken()
+
   const respuesta = await fetch(`${URL_BASE}${ruta}`, {
     method: metodo,
-    headers:
-    cuerpo && !esArchivo ? { 'Content-Type': 'application/json' } : undefined,
+    headers: {
+      ...(cuerpo && !esArchivo && { 'Content-Type': 'application/json' }),
+      ...(token && { Authorization: `Bearer ${token}` }),
+    },
     body: !cuerpo ? undefined : esArchivo ? cuerpo : JSON.stringify(cuerpo),
   })
   const datos = await respuesta.json().catch(() => null)

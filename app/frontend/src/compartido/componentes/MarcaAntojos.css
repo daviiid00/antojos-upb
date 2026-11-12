@@ -1,0 +1,33 @@
+.marca {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.marca__icono {
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 0.625rem;
+  background-color: var(--color-primario);
+  color: var(--color-blanco);
+}
+
+.marca__texto {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+
+.marca__nombre {
+  font-size: 1.125rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.marca__sede {
+  color: var(--color-acento);
+  font-size: 0.625rem;
+  font-weight: 700;
+}

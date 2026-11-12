@@ -1,4 +1,4 @@
-import { ConflictException } from '@nestjs/common';
+import { ConflictException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import bcrypt from 'bcrypt';
 import { QueryFailedError, type Repository } from 'typeorm';
@@ -23,29 +23,55 @@ const errorDeMysql = (code: string) =>
     Object.assign(new Error(`${code}: falla simulada`), { code }),
   );
 
-describe('AuthService.registrar', () => {
-  let repositorio: {
-    existsBy: ReturnType<typeof vi.fn>;
-    create: ReturnType<typeof vi.fn>;
-    save: ReturnType<typeof vi.fn>;
+// Fila de la tabla users, como la devuelve el repositorio.
+const usuarioCon = (passwordHash: string) =>
+  ({
+    id: 7,
+    name: datos.name,
+    email: datos.email,
+    passwordHash,
+    campus: datos.campus,
+    universityLink: datos.universityLink,
+    termsAccepted: true,
+    createdAt: new Date(),
+  }) as Usuario;
+
+type RepositorioSimulado = {
+  existsBy: ReturnType<typeof vi.fn>;
+  findOneBy: ReturnType<typeof vi.fn>;
+  create: ReturnType<typeof vi.fn>;
+  save: ReturnType<typeof vi.fn>;
+};
+
+function montar() {
+  const repositorio: RepositorioSimulado = {
+    existsBy: vi.fn(async () => false),
+    findOneBy: vi.fn(async () => null),
+    create: vi.fn((usuario) => usuario),
+    save: vi.fn(async (usuario) => ({ ...usuario, id: 7 })),
   };
+  const jwt = new JwtService({
+    secret: 'x'.repeat(32),
+    signOptions: { expiresIn: '1d' },
+  });
+  const servicio = new AuthService(
+    repositorio as unknown as Repository<Usuario>,
+    jwt,
+  );
+  return { repositorio, jwt, servicio };
+}
+
+afterEach(() => {
+  vi.restoreAllMocks();
+});
+
+describe('AuthService.registrar', () => {
+  let repositorio: RepositorioSimulado;
   let jwt: JwtService;
   let servicio: AuthService;
 
   beforeEach(() => {
-    repositorio = {
-      existsBy: vi.fn(async () => false),
-      create: vi.fn((usuario) => usuario),
-      save: vi.fn(async (usuario) => ({ ...usuario, id: 7 })),
-    };
-    jwt = new JwtService({
-      secret: 'x'.repeat(32),
-      signOptions: { expiresIn: '1d' },
-    });
-    servicio = new AuthService(
-      repositorio as unknown as Repository<Usuario>,
-      jwt,
-    );
+    ({ repositorio, jwt, servicio } = montar());
   });
 
   it('guarda el hash de bcrypt y nunca la contraseña en texto plano', async () => {
@@ -102,5 +128,96 @@ describe('AuthService.registrar', () => {
     repositorio.save.mockRejectedValue(otroError);
 
     await expect(servicio.registrar(datos)).rejects.toBe(otroError);
+  });
+});
+
+describe('AuthService.login', () => {
+  const CREDENCIALES_INCORRECTAS = 'Correo o contraseña incorrectos.';
+  const credenciales = { email: datos.email, password: datos.password };
+  let repositorio: RepositorioSimulado;
+  let jwt: JwtService;
+  let servicio: AuthService;
+
+  beforeEach(async () => {
+    ({ repositorio, jwt, servicio } = montar());
+    repositorio.findOneBy.mockResolvedValue(
+      usuarioCon(await bcrypt.hash(datos.password, 10)),
+    );
+  });
+
+  it('con credenciales correctas responde solo { token } firmado con sub y email', async () => {
+    const respuesta = await servicio.login(credenciales);
+
+    expect(Object.keys(respuesta)).toEqual(['token']);
+    expect(repositorio.findOneBy).toHaveBeenCalledWith({ email: datos.email });
+    await expect(jwt.verifyAsync(respuesta.token)).resolves.toMatchObject({
+      sub: 7,
+      email: datos.email,
+    });
+  });
+
+  it('responde 401 si la contraseña es incorrecta', async () => {
+    const login = servicio.login({ ...credenciales, password: 'Otra2026x' });
+
+    await expect(login).rejects.toThrow(UnauthorizedException);
+    await expect(login).rejects.toThrow(CREDENCIALES_INCORRECTAS);
+  });
+
+  it('responde 401 con el mismo mensaje si el correo no existe', async () => {
+    repositorio.findOneBy.mockResolvedValue(null);
+
+    const login = servicio.login(credenciales);
+
+    await expect(login).rejects.toThrow(UnauthorizedException);
+    await expect(login).rejects.toThrow(CREDENCIALES_INCORRECTAS);
+  });
+
+  it('si el correo no existe compara igual, con un hash de las mismas rondas que registrar()', async () => {
+    await servicio.registrar(datos);
+    const rondasDeRegistro = bcrypt.getRounds(
+      repositorio.save.mock.calls[0][0].passwordHash,
+    );
+    repositorio.findOneBy.mockResolvedValue(null);
+    const comparar = vi.spyOn(bcrypt, 'compare');
+
+    await expect(servicio.login(credenciales)).rejects.toThrow(
+      UnauthorizedException,
+    );
+
+    expect(comparar).toHaveBeenCalledOnce();
+    const hashComparado = comparar.mock.calls[0][1];
+    expect(bcrypt.getRounds(hashComparado)).toBe(rondasDeRegistro);
+  });
+});
+
+describe('AuthService.obtenerSesion', () => {
+  let repositorio: RepositorioSimulado;
+  let servicio: AuthService;
+
+  beforeEach(() => {
+    ({ repositorio, servicio } = montar());
+  });
+
+  it('devuelve los datos públicos del usuario y nunca el passwordHash', async () => {
+    repositorio.findOneBy.mockResolvedValue(usuarioCon('hash-secreto'));
+
+    const sesion = await servicio.obtenerSesion(7);
+
+    expect(repositorio.findOneBy).toHaveBeenCalledWith({ id: 7 });
+    expect(sesion).toEqual({
+      id: 7,
+      name: datos.name,
+      email: datos.email,
+      campus: datos.campus,
+      universityLink: datos.universityLink,
+    });
+    expect(sesion).not.toHaveProperty('passwordHash');
+  });
+
+  it('responde 401 si el id ya no existe', async () => {
+    const sesion = servicio.obtenerSesion(999);
+
+    await expect(sesion).rejects.toThrow(UnauthorizedException);
+    await expect(sesion).rejects.toThrow('Sesión no válida o vencida.');
   });
 });
