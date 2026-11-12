@@ -1,0 +1,72 @@
+.modal-eliminar-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(15, 23, 42, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 1000;
+}
+
+.modal-eliminar-caja {
+  width: 100%;
+  max-width: 400px;
+  background-color: var(--color-superficie, #ffffff);
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.18);
+}
+
+.modal-eliminar-titulo {
+  margin: 0 0 8px 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--color-texto, #0f172a);
+}
+
+.modal-eliminar-texto {
+  margin: 0 0 16px 0;
+  font-size: 0.92rem;
+  line-height: 1.45;
+  color: #475569;
+}
+
+.modal-eliminar-error {
+  margin: 0 0 14px 0;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background-color: #fef2f2;
+  color: #b91c1c;
+  font-size: 0.85rem;
+}
+
+.modal-eliminar-acciones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.modal-eliminar-btn {
+  padding: 9px 16px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+}
+
+.modal-eliminar-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.modal-eliminar-btn--cancelar {
+  background-color: #f1f5f9;
+  color: #334155;
+}
+
+.modal-eliminar-btn--confirmar {
+  background-color: #dc2626;
+  color: #ffffff;
+}

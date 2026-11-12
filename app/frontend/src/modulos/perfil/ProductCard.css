@@ -71,3 +71,20 @@
   font-weight: 700;
   color: var(--color-primario, #c8102e);
 }
+
+.perfil-product-card__btn-eliminar {
+  align-self: center;
+  padding: 7px 12px;
+  border-radius: 8px;
+  border: 1px solid #fecaca;
+  background-color: #fef2f2;
+  color: #dc2626;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.perfil-product-card__btn-eliminar:hover {
+  background-color: #fee2e2;
+}
