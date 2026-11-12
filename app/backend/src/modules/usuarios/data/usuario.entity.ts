@@ -39,8 +39,5 @@ export class Usuario {
   termsAccepted: boolean;
 
   @CreateDateColumn({ name: 'created_at' })
-    // Número de WhatsApp de contacto del vendedor (opcional)
-  @Column({ type: 'varchar', length: 20, nullable: true })
-  whatsapp: string | null;
   createdAt: Date;
 }

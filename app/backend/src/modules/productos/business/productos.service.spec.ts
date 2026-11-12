@@ -37,17 +37,17 @@ describe('ProductosService.obtenerPorId', () => {
       repositorio as unknown as Repository<Producto>,
     );
   });
-  
-  it('incluye el WhatsApp del vendedor, y null si no tiene', async () => {
-    repositorio.findOne.mockResolvedValueOnce(productoGuardado);
-    expect((await servicio.obtenerPorId(7)).sellerWhatsapp).toBe('3001234567');
 
-    repositorio.findOne.mockResolvedValueOnce({
-      ...productoGuardado,
-      seller: { ...productoGuardado.seller, whatsapp: null },
-    });
-    expect((await servicio.obtenerPorId(7)).sellerWhatsapp).toBeNull();
+ it('incluye el celular del vendedor, y null si no tiene', async () => {
+  repositorio.findOne.mockResolvedValueOnce(productoGuardado);
+  expect((await servicio.obtenerPorId(7)).sellerPhone).toBe('30071344754');
+
+  repositorio.findOne.mockResolvedValueOnce({
+    ...productoGuardado,
+    seller: { ...productoGuardado.seller, phone: null },
   });
+  expect((await servicio.obtenerPorId(7)).sellerPhone).toBeNull();
+});
 
 
   it('devuelve el producto con solo el nombre del vendedor', async () => {

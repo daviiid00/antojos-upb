@@ -1,9 +1,9 @@
 import type { DataSourceOptions } from 'typeorm';
-import { Producto } from '../../modules/productos/data/producto.entity.js';
 import { Usuario } from '../../modules/usuarios/data/usuario.entity.js';
+import { Producto } from '../../modules/productos/data/producto.entity.js';
 import { CrearTablaUsers1793724975476 } from '../migraciones/1793724975476-crear-tabla-users.js';
 import { CrearTablaProducts1794200000000 } from '../migraciones/1794200000000-crear-tabla-products.js';
-import { AgregarWhatsappAUsers1794300000000 } from '../migraciones/1794300000000-agregar-whatsapp-a-users.js';
+import { AgregarPhoneAUsers1794456569172 } from '../migraciones/1794456569172-agregar-phone-a-users.js';
 import type { Entorno } from './env.js';
 
 export function opcionesBaseDeDatos(
@@ -22,7 +22,7 @@ export function opcionesBaseDeDatos(
     migrations: [
       CrearTablaUsers1793724975476,
       CrearTablaProducts1794200000000,
-      AgregarWhatsappAUsers1794300000000,
+      AgregarPhoneAUsers1794456569172,
     ],
     synchronize: false,
   };

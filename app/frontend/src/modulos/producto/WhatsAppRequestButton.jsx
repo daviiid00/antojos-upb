@@ -6,7 +6,7 @@ import './WhatsAppRequestButton.css'
 function WhatsAppRequestButton({ producto, cantidad = 1 }) {
   const unidades = cantidad === 1 ? 'unidad' : 'unidades'
   const mensaje = `Hola ${producto.seller}, vi tu publicación "${producto.name}" en Antojos UPB y quiero solicitar ${cantidad} ${unidades}. ¿Está disponible?`
-  const enlace = construirEnlaceWhatsApp(producto.sellerWhatsapp, mensaje)
+  const enlace = construirEnlaceWhatsApp(producto.sellerPhone, mensaje)
 
   // Criterio: sin número válido, el botón se ve deshabilitado con un aviso
   if (!enlace) {
