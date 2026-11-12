@@ -1,0 +1,32 @@
+.usuario {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  max-width: 10rem;
+  padding: 0.25rem 0.75rem 0.25rem 0.25rem;
+  border-radius: 999px;
+  background-color: rgba(255, 255, 255, 0.75);
+  box-shadow: 0 2px 8px rgba(58, 47, 44, 0.12);
+  color: var(--color-texto);
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+/* Círculo con la inicial */
+.usuario__inicial {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  background-color: var(--color-primario);
+  color: var(--color-blanco);
+  font-size: 0.8125rem;
+}
+
+.usuario__nombre {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

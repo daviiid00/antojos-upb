@@ -1,0 +1,123 @@
+.navegacion {
+  /* Colores aproximados de la barra del prototipo de Figma */
+  --nav-fondo: #a96b5b;
+  --nav-fondo-claro: #b87a69;
+  --nav-texto: #ffffff;
+  --nav-texto-suave: rgba(255, 255, 255, 0.85);
+  --nav-activo: #fde08a;
+  --nav-destacado: #a8d8f5;
+
+  /* Barra flotante, centrada y separada del borde inferior */
+  position: fixed;
+  inset-inline: 0;
+  bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
+  z-index: 10;
+  width: calc(100% - 1.5rem);
+  max-width: 26rem;
+  margin-inline: auto;
+  padding: 0.375rem 0.5rem;
+  border-radius: 1.75rem;
+  background: linear-gradient(180deg, var(--nav-fondo-claro), var(--nav-fondo));
+  box-shadow:
+    0 10px 28px rgba(58, 47, 44, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+.navegacion__lista {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.125rem;
+  padding: 0;
+  list-style: none;
+}
+
+.navegacion__enlace {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1875rem;
+  width: 100%;
+  padding: 0.5rem 0.25rem 0.4375rem;
+  border-radius: 1.125rem;
+  color: var(--nav-texto-suave);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.15s ease;
+}
+
+/* Caja del ícono: misma altura en todos para que los textos queden alineados */
+.navegacion__icono {
+  display: grid;
+  place-items: center;
+  height: 1.75rem;
+}
+
+.navegacion__enlace:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+  color: var(--nav-texto);
+}
+
+.navegacion__enlace:active {
+  transform: scale(0.96);
+}
+
+/* Acceso de la pantalla en la que se está: píldora clara + ícono resaltado */
+.navegacion__enlace--activo {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: var(--nav-activo);
+}
+
+.navegacion__enlace--activo .icono {
+  stroke-width: 2.25;
+}
+
+/* "Publicar": en la misma fila, con una píldora azul detrás del "+" */
+.navegacion__enlace--destacado .navegacion__icono {
+  width: 3rem;
+  border-radius: 999px;
+  background: linear-gradient(160deg, #c3e6fa, var(--nav-destacado));
+  color: var(--color-texto);
+  box-shadow: 0 2px 6px rgba(58, 47, 44, 0.25);
+  transition: transform 0.2s ease;
+}
+
+.navegacion__enlace--destacado .icono {
+  stroke-width: 2.25;
+}
+
+.navegacion__enlace--destacado:hover .navegacion__icono {
+  transform: scale(1.06);
+}
+
+/* Cuando se está en Publicar: sin fondo en el enlace y aro amarillo en la píldora */
+.navegacion__enlace--destacado.navegacion__enlace--activo {
+  background-color: transparent;
+}
+
+.navegacion__enlace--destacado.navegacion__enlace--activo .navegacion__icono {
+  box-shadow:
+    0 0 0 2px var(--nav-activo),
+    0 2px 6px rgba(58, 47, 44, 0.25);
+}
+
+.navegacion__enlace:focus-visible {
+  outline: 3px solid var(--nav-activo);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .navegacion__enlace,
+  .navegacion__enlace--destacado .navegacion__icono {
+    transition: none;
+  }
+
+  .navegacion__enlace:active,
+  .navegacion__enlace--destacado:hover .navegacion__icono {
+    transform: none;
+  }
+}
