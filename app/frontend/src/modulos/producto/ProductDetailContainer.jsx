@@ -5,6 +5,7 @@ import { ErrorApi } from '../../compartido/servicios/api.js'
 import { obtenerProducto } from '../../compartido/servicios/productos.js'
 import ProductImageGallery from './ProductImageGallery.jsx'
 import ProductInfo from './ProductInfo.jsx'
+import QuantitySelector from './QuantitySelector.jsx'
 import WhatsAppRequestButton from './WhatsAppRequestButton.jsx'
 import './ProductDetailContainer.css'
 
@@ -14,6 +15,8 @@ const MENSAJE_ERROR = 'No pudimos cargar el producto. Inténtalo de nuevo.'
 // Consulta el producto de la ruta /producto/:id y arma la pantalla de detalle
 function ProductDetailContainer() {
   const { id } = useParams()
+  // Cantidad elegida: empieza en 1 y viaja en el mensaje de WhatsApp
+  const [cantidad, setCantidad] = useState(1)
   // El resultado se guarda junto con el id al que pertenece
   const [resultado, setResultado] = useState({
     id: null,
@@ -72,7 +75,18 @@ function ProductDetailContainer() {
             nombre={producto.name}
           />
           <ProductInfo producto={producto} />
-          <WhatsAppRequestButton producto={producto} />
+          {producto.stock < 1 ? (
+            <p className="detalle__mensaje">Este producto está agotado.</p>
+          ) : (
+            <>
+              <QuantitySelector
+                cantidad={cantidad}
+                maximo={producto.stock}
+                onCambiar={setCantidad}
+              />
+              <WhatsAppRequestButton producto={producto} cantidad={cantidad} />
+            </>
+          )}
         </>
       )}
     </main>
