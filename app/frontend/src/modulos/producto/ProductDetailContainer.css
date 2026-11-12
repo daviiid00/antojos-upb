@@ -1,0 +1,39 @@
+.detalle {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 28rem;
+  margin-inline: auto;
+  padding: 1.25rem 1.25rem 2rem;
+}
+
+.detalle__barra {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+}
+
+.detalle__volver {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background-color: var(--color-blanco);
+  color: var(--color-texto);
+}
+
+.detalle__volver:focus-visible {
+  outline: 3px solid var(--color-acento);
+  outline-offset: 3px;
+}
+
+.detalle__barra-titulo {
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.detalle__mensaje {
+  color: var(--color-texto-suave);
+  font-size: 0.9375rem;
+}
