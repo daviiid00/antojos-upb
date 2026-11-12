@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtModule, type JwtSignOptions } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { JwtAuthGuard } from '../../shared/auth/jwt-auth.guard.js';
 import type { Entorno } from '../../shared/config/env.js';
 import { AuthService } from './business/auth.service.js';
 import { Usuario } from './data/usuario.entity.js';
@@ -23,6 +24,8 @@ import { AuthController } from './presentation/auth.controller.js';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [AuthService, JwtAuthGuard],
+  // Con JwtModule exportado, otros módulos usan el guard sin configurar JWT otra vez.
+  exports: [JwtModule, JwtAuthGuard],
 })
 export class UsuariosModule {}
