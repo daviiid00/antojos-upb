@@ -9,6 +9,7 @@ import HomePage from './modulos/inicio/HomePage.jsx'
 import PublicarProductoPage from './modulos/publicarProducto/PublicarProductoPage.jsx'
 import ProductDetailContainer from './modulos/producto/ProductDetailContainer.jsx'
 import { ProfilePage } from './modulos/perfil/ProfilePage';
+import SolicitudesPage from './modulos/solicitudes/SolicitudesPage.jsx'
 
 function App() {
   return (
@@ -30,10 +31,7 @@ function App() {
         <Route path="/explorar" element={<CatalogPage />} />
                <Route path="/producto/:id" element={<ProductDetailContainer />} />
         <Route path="/publicar" element={<PublicarProductoPage />} />
-        <Route
-          path="/solicitudes"
-          element={<Proximamente titulo="Solicitudes" />}
-        />
+                <Route path="/solicitudes" element={<SolicitudesPage />} />
         <Route path="/perfil" element={<ProfilePage />} />
         {/* La pantalla de Inicio queda lista para el release 2 */}
         <Route path="/inicio" element={<HomePage />} />

@@ -1,0 +1,29 @@
+.estado {
+  align-self: flex-start;
+  padding: 0.125rem 0.625rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  background-color: var(--color-borde);
+  color: var(--color-texto);
+}
+
+.estado--pendiente {
+  background-color: #fdf0c9;
+  color: #7a5a00;
+}
+
+.estado--confirmado {
+  background-color: var(--color-tarjeta-azul);
+  color: #1d4a6e;
+}
+
+.estado--entregado {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.estado--cancelado {
+  background-color: var(--color-tarjeta-rosa);
+  color: var(--color-acento);
+}
