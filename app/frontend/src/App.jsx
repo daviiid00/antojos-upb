@@ -4,10 +4,9 @@ import Proximamente from './compartido/componentes/Proximamente.jsx'
 import LoginPage from './modulos/autenticacion/LoginPage.jsx'
 import RegisterPage from './modulos/autenticacion/RegisterPage.jsx'
 import WelcomePage from './modulos/autenticacion/WelcomePage.jsx'
-import PublicarProductoPage from './modulos/publicarProducto/PublicarProductoPage.jsx'
 import CatalogPage from './modulos/catalogo/CatalogPage.jsx'
 import HomePage from './modulos/inicio/HomePage.jsx'
-
+import PublicarProductoPage from './modulos/publicarProducto/PublicarProductoPage.jsx'
 
 function App() {
   return (
@@ -17,7 +16,12 @@ function App() {
       <Route path="/welcome" element={<WelcomePage />} />
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/login" element={<LoginPage />} />
-      <Route path="/home" element={<HomePage />} />
+
+      {/* Inicio es del release 2: login y registro mandan a /home, que lleva a Explorar */}
+      <Route path="/home" element={<Navigate to="/explorar" replace />} />
+
+      {/* Ruta anterior de la pantalla de Publicar: ahora es /publicar */}
+      <Route path="/publish" element={<Navigate to="/publicar" replace />} />
 
       {/* Pantallas CON barra de navegación */}
       <Route element={<AppLayout />}>
@@ -26,14 +30,15 @@ function App() {
           path="/producto/:id"
           element={<Proximamente titulo="Detalle del producto" />}
         />
-        <Route path="/publicar" element={<Proximamente titulo="Publicar" />} />
+        <Route path="/publicar" element={<PublicarProductoPage />} />
         <Route
           path="/solicitudes"
           element={<Proximamente titulo="Solicitudes" />}
         />
         <Route path="/perfil" element={<Proximamente titulo="Perfil" />} />
+        {/* La pantalla de Inicio queda lista para el release 2 */}
+        <Route path="/inicio" element={<HomePage />} />
       </Route>
-      <Route path="/publish" element={<PublicarProductoPage />} />
     </Routes>
   )
 }
