@@ -25,6 +25,7 @@ import { crearValidationPipe } from '../src/shared/config/validacion.js';
 const registroValido = {
   name: 'David Anaya',
   email: 'david@upb.edu.co',
+  phone: '3001234567',
   password: 'Antojos2026',
   campus: 'Medellín',
   universityLink: 'Estudiante',
@@ -187,6 +188,53 @@ describe('POST /auth/register (e2e)', () => {
     });
   });
 
+  describe('celular', () => {
+    const MENSAJE_CELULAR = 'El celular debe tener 10 dígitos y empezar por 3.';
+
+    it.each([
+      ['sin separadores', '3001234567'],
+      ['con espacios', '300 123 4567'],
+      ['con guiones', '300-123-4567'],
+      ['con espacios alrededor', '  300 123-4567 '],
+    ])(
+      'acepta un celular %s y lo guarda como 57 + 10 dígitos',
+      async (_caso, phone) => {
+        await registrar({ ...registroValido, phone }).expect(201);
+
+        expect(repositorio.save.mock.calls[0][0].phone).toBe('573001234567');
+      },
+    );
+
+    it.each([
+      ['de 9 dígitos', '300123456'],
+      ['de 11 dígitos', '30012345678'],
+      ['que no empieza por 3 (fijo)', '6041234567'],
+      ['con indicativo +57', '+57 300 123 4567'],
+      ['con indicativo 57 sin +', '573001234567'],
+      ['con letras', '300abc4567'],
+      ['con paréntesis', '(300) 1234567'],
+      ['vacío', ''],
+      ['numérico en vez de texto', 3001234567],
+    ])('rechaza con 400 un celular %s', async (_caso, phone) => {
+      const respuesta = await registrar({ ...registroValido, phone }).expect(
+        400,
+      );
+
+      expect(respuesta.body.message).toContain(MENSAJE_CELULAR);
+      expect(repositorio.save).not.toHaveBeenCalled();
+    });
+
+    it('rechaza con 400 si falta el celular', async () => {
+      const respuesta = await registrar({
+        ...registroValido,
+        phone: undefined,
+      }).expect(400);
+
+      expect(respuesta.body.message).toContain('El celular es obligatorio.');
+      expect(repositorio.save).not.toHaveBeenCalled();
+    });
+  });
+
   describe('correo repetido', () => {
     it('responde 409 si el correo ya tiene una cuenta, aunque cambien las mayúsculas', async () => {
       await registrar(registroValido).expect(201);
@@ -323,7 +371,7 @@ describe('GET /auth/session (e2e)', () => {
     return token ? peticion.set('Authorization', `Bearer ${token}`) : peticion;
   };
 
-  it('con el token de /auth/login responde 200 sin passwordHash', async () => {
+  it('con el token de /auth/login responde 200 sin passwordHash ni celular', async () => {
     const login = await request(app.getHttpServer())
       .post('/auth/login')
       .send({
@@ -342,6 +390,7 @@ describe('GET /auth/session (e2e)', () => {
       universityLink: registroValido.universityLink,
     });
     expect(respuesta.body).not.toHaveProperty('passwordHash');
+    expect(respuesta.body).not.toHaveProperty('phone');
   });
 
   it('acepta el token que devuelve /auth/register', async () => {

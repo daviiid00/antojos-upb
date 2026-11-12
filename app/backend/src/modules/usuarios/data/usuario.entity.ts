@@ -22,6 +22,10 @@ export class Usuario {
   @Column({ type: 'varchar', length: 255 })
   email: string;
 
+  // Con prefijo 57, listo para wa.me. Null en cuentas anteriores al campo.
+  @Column({ type: 'varchar', length: 12, nullable: true })
+  phone: string | null;
+
   @Column({ name: 'password_hash', type: 'varchar', length: 60 })
   passwordHash: string;
 

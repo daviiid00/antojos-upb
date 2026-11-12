@@ -2,6 +2,7 @@ import { useRef, useState } from 'react'
 import { Link, Navigate, useNavigate } from 'react-router'
 import {
   IconoCandado,
+  IconoCelular,
   IconoContinuar,
   IconoCorreo,
   IconoDesplegar,
@@ -9,7 +10,9 @@ import {
   IconoVolver,
 } from '../../compartido/componentes/Iconos.jsx'
 import {
+  CELULAR_COLOMBIANO,
   DOMINIO_INSTITUCIONAL,
+  MENSAJE_CELULAR,
   SEDES,
   VINCULOS_UNIVERSITARIOS,
 } from '../../compartido/constantes/usuario.js'
@@ -24,6 +27,7 @@ import './RegisterPage.css'
 const DATOS_INICIALES = {
   name: '',
   email: '',
+  phone: '',
   universityLink: VINCULOS_UNIVERSITARIOS[0],
   campus: SEDES[0],
   password: '',
@@ -36,6 +40,11 @@ const MENSAJE_DOMINIO = `El correo debe ser institucional (${DOMINIO_INSTITUCION
 // Igual que el backend: se compara el correo recortado y en minúsculas.
 function esCorreoInstitucional(correo) {
   return correo.trim().toLowerCase().endsWith(DOMINIO_INSTITUCIONAL)
+}
+
+// Igual que el backend: se quitan espacios y guiones antes de validar.
+function esCelularValido(celular) {
+  return CELULAR_COLOMBIANO.test(celular.replaceAll(/[\s-]/g, ''))
 }
 
 // El 400 del backend trae un arreglo de mensajes y el 409 (correo repetido)
@@ -53,9 +62,11 @@ function mensajesDeError(error) {
 function RegisterPage() {
   const navigate = useNavigate()
   const campoCorreo = useRef(null)
+  const campoCelular = useRef(null)
   const [datos, setDatos] = useState(DATOS_INICIALES)
   const [errores, setErrores] = useState([])
   const [errorCorreo, setErrorCorreo] = useState(null)
+  const [errorCelular, setErrorCelular] = useState(null)
   const [enviando, setEnviando] = useState(false)
 
   if (haySesion()) return <Navigate to="/home" replace />
@@ -63,6 +74,7 @@ function RegisterPage() {
   function actualizar(evento) {
     const { name, type, value, checked } = evento.target
     if (name === 'email') setErrorCorreo(null)
+    if (name === 'phone') setErrorCelular(null)
     setDatos((previos) => ({
       ...previos,
       [name]: type === 'checkbox' ? checked : value,
@@ -72,11 +84,13 @@ function RegisterPage() {
   async function enviar(evento) {
     evento.preventDefault()
     setErrores([])
-    if (!esCorreoInstitucional(datos.email)) {
-      setErrorCorreo(MENSAJE_DOMINIO)
-      campoCorreo.current?.focus()
-      return
-    }
+    const correoValido = esCorreoInstitucional(datos.email)
+    const celularValido = esCelularValido(datos.phone)
+    setErrorCorreo(correoValido ? null : MENSAJE_DOMINIO)
+    setErrorCelular(celularValido ? null : MENSAJE_CELULAR)
+    if (!correoValido) campoCorreo.current?.focus()
+    else if (!celularValido) campoCelular.current?.focus()
+    if (!correoValido || !celularValido) return
     setEnviando(true)
     try {
       const { token } = await llamarApi('/auth/register', {
@@ -165,6 +179,43 @@ function RegisterPage() {
           )}
           <p id="registro-correo-ayuda" className="registro__ayuda">
             Usaremos este correo para validar tu vínculo con UPB.
+          </p>
+        </div>
+
+        <div className="registro__campo">
+          <label className="registro__etiqueta" htmlFor="registro-celular">
+            Celular (WhatsApp)
+          </label>
+          <div className="registro__control">
+            <IconoCelular />
+            <input
+              ref={campoCelular}
+              id="registro-celular"
+              className="registro__entrada"
+              type="tel"
+              name="phone"
+              autoComplete="tel-national"
+              inputMode="tel"
+              placeholder="300 123 4567"
+              value={datos.phone}
+              onChange={actualizar}
+              aria-required="true"
+              aria-invalid={errorCelular ? 'true' : undefined}
+              aria-describedby={
+                errorCelular
+                  ? 'registro-celular-error registro-celular-ayuda'
+                  : 'registro-celular-ayuda'
+              }
+            />
+          </div>
+          {errorCelular && (
+            <p id="registro-celular-error" className="registro__error-campo">
+              {errorCelular}
+            </p>
+          )}
+          <p id="registro-celular-ayuda" className="registro__ayuda">
+            Otros usuarios de Antojos UPB lo verán para contactarte por
+            WhatsApp.
           </p>
         </div>
 
