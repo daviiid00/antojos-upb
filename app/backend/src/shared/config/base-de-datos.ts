@@ -1,6 +1,8 @@
 import type { DataSourceOptions } from 'typeorm';
 import { Usuario } from '../../modules/usuarios/data/usuario.entity.js';
+import { Producto } from '../../modules/productos/data/producto.entity.js';
 import { CrearTablaUsers1793724975476 } from '../migraciones/1793724975476-crear-tabla-users.js';
+import { CrearTablaProducts1794200000000 } from '../migraciones/1794200000000-crear-tabla-products.js';
 import { AgregarPhoneAUsers1794456569172 } from '../migraciones/1794456569172-agregar-phone-a-users.js';
 import type { Entorno } from './env.js';
 
@@ -16,8 +18,12 @@ export function opcionesBaseDeDatos(
     database: leer('DB_NAME'),
     charset: 'utf8mb4',
     // Entidades y migraciones se listan una por una, sin comodines.
-    entities: [Usuario],
-    migrations: [CrearTablaUsers1793724975476, AgregarPhoneAUsers1794456569172],
+    entities: [Usuario, Producto],
+    migrations: [
+      CrearTablaUsers1793724975476,
+      CrearTablaProducts1794200000000,
+      AgregarPhoneAUsers1794456569172,
+    ],
     synchronize: false,
   };
 }
