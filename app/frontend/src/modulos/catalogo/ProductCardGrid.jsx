@@ -33,10 +33,10 @@ function ProductCardGrid({ productos }) {
         <li key={producto.id}>
           {/* Criterio: al hacer clic en la tarjeta se va al detalle del producto */}
           <Link className="tarjeta-producto" to={`/producto/${producto.id}`}>
-            {producto.image_url ? (
+            {producto.imageUrl ? (
               <img
                 className="tarjeta-producto__imagen"
-                src={producto.image_url}
+                src={producto.imageUrl}
                 alt=""
                 width="400"
                 height="300"

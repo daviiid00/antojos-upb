@@ -7,6 +7,7 @@ import WelcomePage from './modulos/autenticacion/WelcomePage.jsx'
 import CatalogPage from './modulos/catalogo/CatalogPage.jsx'
 import HomePage from './modulos/inicio/HomePage.jsx'
 import PublicarProductoPage from './modulos/publicarProducto/PublicarProductoPage.jsx'
+import ProductDetailContainer from './modulos/producto/ProductDetailContainer.jsx'
 
 function App() {
   return (
@@ -26,10 +27,7 @@ function App() {
       {/* Pantallas CON barra de navegación */}
       <Route element={<AppLayout />}>
         <Route path="/explorar" element={<CatalogPage />} />
-        <Route
-          path="/producto/:id"
-          element={<Proximamente titulo="Detalle del producto" />}
-        />
+               <Route path="/producto/:id" element={<ProductDetailContainer />} />
         <Route path="/publicar" element={<PublicarProductoPage />} />
         <Route
           path="/solicitudes"
