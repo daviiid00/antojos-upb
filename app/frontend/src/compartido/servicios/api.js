@@ -20,6 +20,7 @@ export async function llamarApi(ruta, { metodo = 'GET', cuerpo } = {}) {
     throw new Error(mensaje)
   }
 
+
   const esArchivo = cuerpo instanceof FormData
     const token = obtenerToken()
   const respuesta = await fetch(`${URL_BASE}${ruta}`, {
@@ -29,6 +30,7 @@ export async function llamarApi(ruta, { metodo = 'GET', cuerpo } = {}) {
          ...(token && { Authorization: `Bearer ${token}` }),
        },
     body: !cuerpo ? undefined : esArchivo ? cuerpo : JSON.stringify(cuerpo),
+
   })
   const datos = await respuesta.json().catch(() => null)
   if (!respuesta.ok) throw new ErrorApi(respuesta.status, datos)
