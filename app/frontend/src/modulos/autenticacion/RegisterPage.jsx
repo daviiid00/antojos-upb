@@ -15,6 +15,7 @@ import {
 } from '../../compartido/constantes/usuario.js'
 import { ErrorApi, llamarApi } from '../../compartido/servicios/api.js'
 import {
+  guardarNombre,
   guardarToken,
   haySesion,
 } from '../../compartido/sesion-rutas/sesion.js'
@@ -83,6 +84,7 @@ function RegisterPage() {
         cuerpo: datos,
       })
       guardarToken(token)
+       guardarNombre(datos.name.trim()) // para mostrarlo arriba en la app
       navigate('/home', { replace: true })
     } catch (error) {
       setErrores(mensajesDeError(error))
