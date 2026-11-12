@@ -28,6 +28,9 @@ export class Producto {
   @Column({ type: 'int', unsigned: true })
   stock: number;
 
+  @Column({ type: 'varchar', length: 10, default: 'ACTIVE' })
+  status: 'ACTIVE' | 'PAUSED' | 'DELETED';
+
   @ManyToOne(() => Usuario, { nullable: false })
   @JoinColumn({ name: 'seller_id' })
   seller: Usuario;

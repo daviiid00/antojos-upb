@@ -123,4 +123,11 @@ export class ProductosService {
     if (!producto) throw new NotFoundException('No encontramos este producto.');
     return aPublico(producto);
   }
+
+  listarActivosDe(vendedorId: number): Promise<Producto[]> {
+    return this.productos.find({
+      where: { seller: { id: vendedorId }, status: 'ACTIVE' },
+      order: { createdAt: 'DESC' },
+    });
+  }
 }

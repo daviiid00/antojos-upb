@@ -156,7 +156,7 @@ function PublicarProductoPage() {
           imageUrl: urlImagen,
         },
       })
-      navigate('/profile', { replace: true })
+      navigate('/perfil', { replace: true })
     } catch (fallo) {
       setErroresServidor(mensajesDePublicacion(fallo))
       setPublicando(false)

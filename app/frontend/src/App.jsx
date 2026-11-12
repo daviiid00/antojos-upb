@@ -8,6 +8,7 @@ import CatalogPage from './modulos/catalogo/CatalogPage.jsx'
 import HomePage from './modulos/inicio/HomePage.jsx'
 import PublicarProductoPage from './modulos/publicarProducto/PublicarProductoPage.jsx'
 import ProductDetailContainer from './modulos/producto/ProductDetailContainer.jsx'
+import { ProfilePage } from './modulos/perfil/ProfilePage';
 
 function App() {
   return (
@@ -33,7 +34,7 @@ function App() {
           path="/solicitudes"
           element={<Proximamente titulo="Solicitudes" />}
         />
-        <Route path="/perfil" element={<Proximamente titulo="Perfil" />} />
+        <Route path="/perfil" element={<ProfilePage />} />
         {/* La pantalla de Inicio queda lista para el release 2 */}
         <Route path="/inicio" element={<HomePage />} />
       </Route>
