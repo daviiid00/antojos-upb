@@ -85,6 +85,24 @@ export function IconoCerrar() {
     </Icono>
   )
 }
+export function IconoDestellos() {
+  return (
+    <Icono>
+      <path d="m12 3 1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z" />
+      <path d="M19 3v4M17 5h4M5 17v4M3 19h4" />
+    </Icono>
+  )
+}
+
+export function IconoEscudo() {
+  return (
+    <Icono>
+      <path d="M12 3 5 6v5c0 4.6 3 8.4 7 10 4-1.6 7-5.4 7-10V6z" />
+      <path d="m9 12 2 2 4-4" />
+    </Icono>
+  )
+}
+
 export function IconoFiltros() {
   return (
     <Icono>
