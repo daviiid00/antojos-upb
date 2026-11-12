@@ -5,6 +5,7 @@ import { ProductosModule } from './modules/productos/productos.module.js';
 import { UsuariosModule } from './modules/usuarios/usuarios.module.js';
 import { opcionesBaseDeDatos } from './shared/config/base-de-datos.js';
 import { type Entorno, validarEntorno } from './shared/config/env.js';
+import { SolicitudesModule } from './modules/solicitudes/solicitudes.module.js';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { type Entorno, validarEntorno } from './shared/config/env.js';
     }),
     UsuariosModule,
     ProductosModule,
+    SolicitudesModule,
   ],
 })
 export class AppModule {}

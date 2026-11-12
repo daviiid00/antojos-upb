@@ -11,9 +11,9 @@ const entornoValido = {
   JWT_SECRET: SECRETO_VALIDO,
   JWT_EXPIRES_IN: '1d',
   FRONTEND_URL: 'http://localhost:5173',
-  CLOUDINARY_CLOUD_NAME: 'pendiente',
-  CLOUDINARY_API_KEY: 'pendiente',
-  CLOUDINARY_API_SECRET: 'pendiente',
+  CLOUDINARY_CLOUD_NAME: 'cszwisim',
+  CLOUDINARY_API_KEY: '969786913919175',
+  CLOUDINARY_API_SECRET: 'oNrZMv31sPcjLhrBBUAuDDtjLaU',
 };
 
 describe('validarEntorno', () => {
