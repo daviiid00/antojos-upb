@@ -1,0 +1,45 @@
+.profile-page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 20px 16px 80px;
+}
+
+.profile-page__header {
+  margin-bottom: 24px;
+}
+
+.profile-page__titulo {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-texto, #0f172a);
+}
+
+.profile-page__subtitulo {
+  margin: 0 0 14px 0;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--color-texto, #0f172a);
+}
+
+.perfil-product-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.perfil-mensaje {
+  padding: 16px;
+  border-radius: 10px;
+  background-color: #f8fafc;
+  color: #475569;
+  text-align: center;
+}
+
+.perfil-mensaje--error {
+  background-color: #fef2f2;
+  color: #b91c1c;
+}

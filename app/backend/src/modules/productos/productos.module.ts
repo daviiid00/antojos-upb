@@ -6,6 +6,7 @@ import type { Entorno } from '../../shared/config/env.js';
 import { Producto } from './data/producto.entity.js';
 import { ProductosService } from './business/productos.service.js';
 import { ProductosController } from './presentation/productos.controller.js';
+import { MisProductosController } from './presentation/mis-productos.controller.js';
 
 @Module({
     imports: [
@@ -17,7 +18,7 @@ import { ProductosController } from './presentation/productos.controller.js';
       }),
     }),
   ],
-  controllers: [ProductosController],
+  controllers: [ProductosController, MisProductosController],
   providers: [ProductosService],
 })
 export class ProductosModule {}

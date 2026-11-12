@@ -5,6 +5,7 @@ import { CrearTablaUsers1793724975476 } from '../migraciones/1793724975476-crear
 import { CrearTablaProducts1794200000000 } from '../migraciones/1794200000000-crear-tabla-products.js';
 import { AgregarPhoneAUsers1794456569172 } from '../migraciones/1794456569172-agregar-phone-a-users.js';
 import type { Entorno } from './env.js';
+import { AgregarStatusAProducts1794508328559 } from '../migraciones/1794508328559-agregar-status-a-products.js';
 
 export function opcionesBaseDeDatos(
   leer: (nombre: keyof Entorno) => string,
@@ -23,6 +24,7 @@ export function opcionesBaseDeDatos(
       CrearTablaUsers1793724975476,
       CrearTablaProducts1794200000000,
       AgregarPhoneAUsers1794456569172,
+      AgregarStatusAProducts1794508328559,
     ],
     synchronize: false,
   };
