@@ -7,4 +7,4 @@
 
 El prototipo de media fidelidad cubre: inicio de sesión / crear cuenta, especificaciones del producto, perfil (publicaciones activas y pausadas), crear producto nuevo y solicitudes.
 
-> ⚠️ **Pendiente:** exportar las pantallas principales como imágenes (PNG) y guardarlas en esta carpeta, para que los wireframes queden dentro del repositorio y no dependan de enlaces externos.
+
