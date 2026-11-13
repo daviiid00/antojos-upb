@@ -6,7 +6,7 @@ Documentos que se desarrollaron durante el semestre para definir y planificar An
 |---|---|---|
 | Documento de requisitos (SRS) | [`requisitos/documento-de-requisitos-srs.pdf`](requisitos/documento-de-requisitos-srs.pdf) | ✅ Incluido |
 | Diagrama de casos de uso | [`casos-de-uso/diagrama-casos-de-uso.png`](casos-de-uso/diagrama-casos-de-uso.png) | ✅ Incluido |
-| Diagrama de procesos | [`procesos/`](procesos/README.md) | ❌ Pendiente |
+| Diagrama de procesos | [`procesos/`](procesos/README.md) | ✅ Incluido |
 | Wireframes | [`wireframes/`](wireframes/README.md) | ⚠️ Solo enlaces a los prototipos |
 
 ## Contexto de los talleres
